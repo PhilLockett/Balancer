@@ -108,6 +108,7 @@ std::vector<Track> buildTrackListFromInputFile(const std::filesystem::path & inp
     input.read();
 
     std::vector<Track> tracks{};
+    tracks.reserve(input.size());
 
     for (const auto & line : input)
         tracks.emplace_back(line);
