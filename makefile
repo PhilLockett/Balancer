@@ -1,5 +1,5 @@
 # Makefile for Logger unit tests.
-objects  = TrackSort.o
+objects  = Balancer.o
 objects += Side.o
 objects += Opts.o
 objects += Configuration.o
@@ -15,14 +15,14 @@ headers += Utilities.h
 
 options = -std=c++20
 
-TrackSort:	$(objects)	$(headers)
-	g++ $(options) -o TrackSort $(objects)
+Balancer:	$(objects)	$(headers)
+	g++ $(options) -o Balancer $(objects)
 
 %.o:	%.cpp	$(headers)
 	g++ $(options) -c -o $@ $<
 
 format:
-	tfc -s -u -r TrackSort.cpp
+	tfc -s -u -r Balancer.cpp
 	tfc -s -u -r Side.cpp
 	tfc -s -u -r Side.h
 	tfc -s -u -r Configuration.cpp

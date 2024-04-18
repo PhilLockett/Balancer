@@ -1,5 +1,5 @@
-# TrackSort
-`TrackSort` is a command-line utility for splitting 'tracks' across multiple
+# Balancer
+`Balancer` is a command-line utility for balancing 'tracks' across multiple
 'sides'.
 
 **USE AT OWN RISK.**
@@ -12,20 +12,20 @@ A more generic description could be that it reads a list of values with labels
 (tracks) and balances these across multiple containers (sides). Use the `-p`
 option to display the values as integers.
 
-To use `TrackSort` you will need a C++ compiler and `make` utility installed. 
+To use `Balancer` you will need a C++ compiler and `make` utility installed. 
 
 ## Cloning and compiling
 To clone and compile this code, execute the following unix/linux commands:
 
-    git clone https://github.com/PhilLockett/TrackSort.git
-    cd TrackSort/
+    git clone https://github.com/PhilLockett/Balancer.git
+    cd Balancer/
     make
 
 ## Usage
-With `TrackSort` compiled the following command will display the help page:
+With `Balancer` compiled the following command will display the help page:
 
-    $ ./TrackSort -h
-    Usage: ./TrackSort [Options]
+    $ ./Balancer -h
+    Usage: ./Balancer [Options]
 
     Splits a list of tracks across multiple sides of a given length.
 
@@ -92,7 +92,7 @@ followed by the character to use (which may need to be singularly quoted).
 ### Example track list
 The following track list example shows various ways of representing the length
 of a track, however it is not required to mix formats, but it is recommended to
-use the same format throughout.
+use the same length format throughout.
 
     00:02:00	Sgt. Pepper's Lonely Hearts Club Band
     00:02:42	With a Little Help from My Friends
@@ -111,7 +111,7 @@ use the same format throughout.
 ## Points of interest
 This code has the following points of interest:
 
-  * Uses getopt_long() to help handle command line parameters.
+  * Uses 'Opts' to help handle command line parameters.
   * The command line parameters are stored in the Configuration class.
   * The Configuration class is implemented as a singleton.
   * The Configuration setters are private so only methods can use them.

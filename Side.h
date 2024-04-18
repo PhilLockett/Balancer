@@ -18,10 +18,10 @@
  *
  * @section DESCRIPTION
  *
- * 'TrackSort' is a command-line utility for splitting tracks across multiple
+ * 'Balancer' is a command-line utility for balancing 'tracks' across multiple
  * sides.
  *
- * Class definitions for the track splitter.
+ * Class definitions for the Balancer.
  */
 
 #if !defined _SIDE_H_INCLUDED_

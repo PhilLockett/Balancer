@@ -18,10 +18,10 @@
  *
  * @section DESCRIPTION
  *
- * 'TrackSort' is a command-line utility for splitting tracks across multiple
+ * 'Balancer' is a command-line utility for balancing 'tracks' across multiple
  * sides.
  *
- * Common interfaces for the track splitter.
+ * Common interfaces for the Balancer.
  */
 
 #if !defined _CONFIGURATION_H_INCLUDED_
@@ -33,9 +33,9 @@
 #include "Utilities.h"
 
 /**
- * @section track splitter configuration data.
+ * @section Balancer configuration data.
  *
- * Implementation of the track splitter comand line configuration Singleton.
+ * Implementation of the Balancer comand line configuration Singleton.
  */
 
 class Configuration
@@ -43,7 +43,7 @@ class Configuration
 private:
 //- Hide the default constructor and destructor.
     Configuration(void) : 
-        name{"TrackSort"}, inputFile{}, timeout{60}, seconds{}, even{},
+        name{"Balancer"}, inputFile{}, timeout{60}, seconds{}, even{},
         boxes{}, shuffle{}, plain{}, csv{}, divider{','}, debug{}
         {  }
     virtual ~Configuration(void) {}

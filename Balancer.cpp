@@ -1,5 +1,5 @@
 /**
- * @file    TrackSort.cpp
+ * @file    Balancer.cpp
  * @author  Phil Lockett <phillockett65@gmail.com>
  * @version 1.0
  *
@@ -18,19 +18,22 @@
  *
  * @section DESCRIPTION
  *
- * System entry point for the track splitter.
+ * 'Balancer' is a command-line utility for balancing 'tracks' across multiple
+ * sides.
+ *
+ * System entry point.
  *
  * Build using:
- *    g++ -std=c++20 -c -o TrackSort.o TrackSort.cpp
+ *    g++ -std=c++20 -c -o Balancer.o Balancer.cpp
  *    g++ -std=c++20 -c -o Side.o Side.cpp
  *    g++ -std=c++20 -c -o Configuration.o Configuration.cpp
  *    g++ -std=c++20 -c -o Utilities.o Utilities.cpp
  *    g++ -std=c++20 -c -o Shuffle.o Shuffle.cpp
  *    g++ -std=c++20 -c -o Split.o Split.cpp
- *    g++ -std=c++20 -o TrackSort TrackSort.o Side.o Configuration.o Utilities.o Shuffle.o Split.o
+ *    g++ -std=c++20 -o Balancer Balancer.o Side.o Configuration.o Utilities.o Shuffle.o Split.o
  *
  * Test using:
- *    ./TrackSort -i Tracks.txt -d 19:40
+ *    ./Balancer -i Tracks.txt -d 19:40
  *
  */
 

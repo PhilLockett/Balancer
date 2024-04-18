@@ -18,10 +18,10 @@
  *
  * @section DESCRIPTION
  *
- * 'TrackSort' is a command-line utility for splitting tracks across multiple
+ * 'Balancer' is a command-line utility for balancing 'tracks' across multiple
  * sides.
  *
- * Implementation of the track splitter command line configuration Singleton.
+ * Implementation of the Balancer command line configuration Singleton.
  */
 
 #include <future>
@@ -142,7 +142,7 @@ int Configuration::parseCommandLine(int argc, char *argv[])
 
 
 /**
- * @brief Initialise 'TrackSort' using command line input and ensure we only
+ * @brief Initialise 'Balancer' using command line input and ensure we only
  * do it once.
  * 
  * @param argc command line argument count.
@@ -161,7 +161,7 @@ int Configuration::initialise(int argc, char *argv[])
 
 
 /**
- * @section track splitter configuration data.
+ * @section Balancer configuration data.
  */
 
 /**
