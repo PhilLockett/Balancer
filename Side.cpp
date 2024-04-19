@@ -57,7 +57,7 @@ std::string Track::toString(bool plain, bool csv) const
 {
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
-    const std::string c{Configuration::getDivider()};
+    const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
         s = "Track" + c + time + c + "\"" + title + "\"" + c;
@@ -71,7 +71,7 @@ bool Track::stream(std::ostream & os, bool plain, bool csv) const
 {
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
-    const std::string c{Configuration::getDivider()};
+    const std::string c{Configuration::getDelimiter()};
     if (csv)
         os << "Track" << c << time << c << "\"" << title << "\"" << c;
     else
@@ -103,7 +103,7 @@ std::string Side::toString(bool plain, bool csv) const
 {
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
-    const std::string c{Configuration::getDivider()};
+    const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
         s = "Side" + c + time + c + "\"" + title + ", " + std::to_string(size()) + " tracks\"" + c;
@@ -124,7 +124,7 @@ bool Side::stream(std::ostream & os, bool plain, bool csv) const
 {
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
-    const std::string c{Configuration::getDivider()};
+    const std::string c{Configuration::getDelimiter()};
     if (csv)
         os << "Side" << c << time << c << "\"" << title << ", " << std::to_string(size()) << " tracks\"" << c;
     else

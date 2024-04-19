@@ -60,7 +60,7 @@ const Opts::OptsType optList
     { 's', "shuffle",   NULL,       "Re-order tracks for optimal fit." },
     { 'p', "plain",     NULL,       "Display lengths in seconds instead of hh:mm:ss." },
     { 'c', "csv",       NULL,       "Generate output as comma separated variables." },
-    { 'a', "divider",   "char",     "Character used to separate csv fields." },
+    { 'a', "delimiter", "char",     "Character used to separate csv fields." },
     { 'x', NULL,        NULL,       "" },
 
 };
@@ -183,7 +183,7 @@ void Configuration::display(std::ostream &os) const
     if (isPlain())
         os << "Display lengths in seconds instead of hh:mm:ss.\n";
     if (isCSV())
-        os << "Comma separated variable output requested separated by " << getDivider() << ".\n";
+        os << "Comma separated variable output requested separated by " << getDelimiter() << ".\n";
 }
 
 /**

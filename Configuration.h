@@ -97,7 +97,7 @@ public:
     static bool isShuffle(void) { return instance().shuffle; }
     static bool isPlain(void) { return instance().plain; }
     static bool isCSV(void) { return instance().csv; }
-    static char getDivider(void) { return instance().divider; }
+    static char getDelimiter(void) { return instance().divider; }
     static bool isDebug(void) { return instance().debug; }
 
     static bool isValid(bool showErrors = false);
