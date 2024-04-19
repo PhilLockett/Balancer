@@ -129,7 +129,7 @@ bool Side::stream(std::ostream & os, bool plain, bool csv) const
         os << "Side" << c << time << c << "\"" << title << ", " << std::to_string(size()) << " tracks\"" << c;
     else
         os << title << " - " << std::to_string(size()) << " tracks";
-    os << '\n';
+    os << "\n";
 
     for (const auto & track : tracks)
         track.stream(os, plain, csv);
