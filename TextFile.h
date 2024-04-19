@@ -24,7 +24,7 @@
 #if !defined(_TEXTFILE_H__20210503_1300__INCLUDED_)
 #define _TEXTFILE_H__20210503_1300__INCLUDED_
 
-#include <vector>
+#include <list>
 #include <string>
 #include <fstream>
 #include <filesystem>
@@ -39,7 +39,7 @@ template<typename T=char>
 class TextFile
 {
 public:
-    using Iterator = std::vector<std::basic_string<T>>::const_iterator;
+    using Iterator = std::list<std::basic_string<T>>::const_iterator;
 
     TextFile(const std::string & file) : fileName{file} {}
     TextFile(const std::filesystem::path & file) : fileName{file} {}
@@ -50,11 +50,11 @@ public:
 
     friend std::ostream & operator<<(std::ostream &os, const TextFile &A) { A.display(os); return os; }
 
-    void setData(const std::vector<std::basic_string<T>> & other) { data = other; }
-    std::vector<std::basic_string<T>> getData() { return data; }
-    const std::vector<std::basic_string<T>> getData() const { return data; }
-    std::vector<std::basic_string<T>> moveData() noexcept { return std::move(data); }
-    void moveData(std::vector<std::basic_string<T>> && other) noexcept { data = std::move(other); }
+    void setData(const std::list<std::basic_string<T>> & other) { data = other; }
+    std::list<std::basic_string<T>> getData() { return data; }
+    const std::list<std::basic_string<T>> getData() const { return data; }
+    std::list<std::basic_string<T>> moveData() noexcept { return std::move(data); }
+    void moveData(std::list<std::basic_string<T>> && other) noexcept { data = std::move(other); }
 
     bool equal(const TextFile & other) const;
     bool equal(const TextFile & other, size_t count) const { return std::equal(data.begin(), data.begin()+count, other.data.begin()); }
@@ -70,13 +70,13 @@ public:
     Iterator begin(void) { return data.begin(); }
     Iterator end(void) { return data.end(); }
 
-    int write(const std::vector<std::basic_string<T>> & other) { setData(other); return write(); }
+    int write(const std::list<std::basic_string<T>> & other) { setData(other); return write(); }
     int write(void) const;
-    int read(int reserve = 100);
+    int read(void);
 
 private:
     std::filesystem::path fileName;
-    std::vector<std::basic_string<T>> data;
+    std::list<std::basic_string<T>> data;
 
 };
 
@@ -133,12 +133,11 @@ int TextFile<T>::write(void) const
  * @return int error value or 0 if no errors.
  */
 template<typename T>
-int TextFile<T>::read(int res)
+int TextFile<T>::read(void)
 {
     const std::basic_string<T> tokens{T('\r'), T('\n'), T('\0')};
     if (std::basic_ifstream<T> is{fileName, std::ios::in})
     {
-        reserve(res);
         std::basic_string<T> line;
 
         while (getline(is, line))
