@@ -67,6 +67,20 @@ std::string Track::toString(bool plain, bool csv) const
     return s;
 }
 
+bool Track::stream(std::ostream & os, bool plain, bool csv) const
+{
+    std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
+
+    const std::string c{Configuration::getDivider()};
+    if (csv)
+        os << "Track" << c << time << c << "\"" << title << "\"" << c;
+    else
+        os << time << " - " << title;
+    os << "\n";
+
+    return true;
+}
+
 
 /**
  * @section Define Side class.
@@ -104,5 +118,25 @@ std::string Side::toString(bool plain, bool csv) const
         s += time + '\n';
 
     return s;
+}
+
+bool Side::stream(std::ostream & os, bool plain, bool csv) const
+{
+    std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
+
+    const std::string c{Configuration::getDivider()};
+    if (csv)
+        os << "Side" << c << time << c << "\"" << title << ", " << std::to_string(size()) << " tracks\"" << c;
+    else
+        os << title << " - " << std::to_string(size()) << " tracks";
+    os << '\n';
+
+    for (const auto & track : tracks)
+        track.stream(os, plain, csv);
+
+    if (!csv)
+        os << time << "\n\n";
+
+    return true;
 }
 

@@ -45,6 +45,7 @@ public:
     size_t getValue() const { return seconds; }
 
     std::string toString(bool plain=false, bool csv=false) const;
+    bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
 
 private:
     std::string title;
@@ -76,6 +77,7 @@ public:
     Iterator end(void) { return tracks.end(); }
 
     std::string toString(bool plain=false, bool csv=false) const;
+    bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
 
     void clear() { seconds = 0; tracks.clear(); }
 
