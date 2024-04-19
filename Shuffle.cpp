@@ -265,7 +265,7 @@ std::string Finder::trackToString(size_t track, bool plain, bool csv) const
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
-        s = "Track" + c + time + c + "\"" + title + "\"" + c;
+        s = "Track" + c + time + c + "\"" + title + "\"";
     else
         s = time + " - " + title;
 
@@ -283,7 +283,7 @@ std::string Finder::sideToString(const std::vector<size_t> & side, const std::st
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
-        s = "Side" + c + time + c + "\"" + title + ", " + std::to_string(side.size()) + " tracks\"" + c;
+        s = "Side" + c + time + c + "\"" + title + ", " + std::to_string(side.size()) + " tracks\"";
     else
         s = title + " - " + std::to_string(side.size()) + " tracks";
     s += '\n';

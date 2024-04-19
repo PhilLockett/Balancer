@@ -60,7 +60,7 @@ std::string Track::toString(bool plain, bool csv) const
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
-        s = "Track" + c + time + c + "\"" + title + "\"" + c;
+        s = "Track" + c + time + c + "\"" + title + "\"";
     else
         s = time + " - " + title;
 
@@ -73,7 +73,7 @@ bool Track::stream(std::ostream & os, bool plain, bool csv) const
 
     const std::string c{Configuration::getDelimiter()};
     if (csv)
-        os << "Track" << c << time << c << "\"" << title << "\"" << c;
+        os << "Track" << c << time << c << "\"" << title << "\"";
     else
         os << time << " - " << title;
     os << "\n";
@@ -106,7 +106,7 @@ std::string Side::toString(bool plain, bool csv) const
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
-        s = "Side" + c + time + c + "\"" + title + ", " + std::to_string(size()) + " tracks\"" + c;
+        s = "Side" + c + time + c + "\"" + title + ", " + std::to_string(size()) + " tracks\"";
     else
         s = title + " - " + std::to_string(size()) + " tracks";
     s += '\n';
@@ -126,7 +126,7 @@ bool Side::stream(std::ostream & os, bool plain, bool csv) const
 
     const std::string c{Configuration::getDelimiter()};
     if (csv)
-        os << "Side" << c << time << c << "\"" << title << ", " << std::to_string(size()) << " tracks\"" << c;
+        os << "Side" << c << time << c << "\"" << title << ", " << std::to_string(size()) << " tracks\"";
     else
         os << title << " - " << std::to_string(size()) << " tracks";
     os << "\n";
