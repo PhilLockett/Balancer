@@ -232,7 +232,7 @@ int splitTracksAcrossSides(std::vector<Track> & tracks)
         std::cout << "\nThe recommended sides are\n";
 
     for (const auto & side : sides)
-        std::cout << side.stream(std::cout, Configuration::isPlain(), csv);
+        side.stream(std::cout, Configuration::isPlain(), csv);
 
     return 0;
 }
