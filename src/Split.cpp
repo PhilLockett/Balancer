@@ -39,12 +39,12 @@
  * 
  * @param tracks to split across sides.
  * @param duration limit of a side.
- * @return std::vector<Side> list of sides containing the tracks.
+ * @return Album list of sides containing the tracks.
  */
-static std::vector<Side> addTracksToSides(const std::vector<Track> & tracks, size_t duration)
+static Album addTracksToSides(const std::vector<Track> & tracks, size_t duration)
 {
     // std::cout << "Add tracks to sides\n";
-    std::vector<Side> sides;
+    Album sides;
     Side side{};
     for (const auto & track : tracks)
     {
@@ -57,7 +57,7 @@ static std::vector<Side> addTracksToSides(const std::vector<Track> & tracks, siz
             const auto count{sides.size() + 1};
             const std::string title{"Side " + std::to_string(count)};
             side.setTitle(title);
-            sides.push_back(side);
+            sides.push(side);
             side.clear();
             side.push(track);
         }
@@ -67,7 +67,7 @@ static std::vector<Side> addTracksToSides(const std::vector<Track> & tracks, siz
         const auto count{sides.size() + 1};
         const std::string title{"Side " + std::to_string(count)};
         side.setTitle(title);
-        sides.push_back(side);
+        sides.push(side);
         side.clear();
     }
 
@@ -97,17 +97,16 @@ static bool isMinimumTooShort(size_t required, size_t current)
  * sides. If it isn't, then the previous sides are too greedy.
  * 
  * @param sides currently being considered.
- * @return true if last side doesn't hold enough tracks.
- * @return false otherwise.
+ * @return true if last side doesn't hold enough tracks, false otherwise.
  */
-static bool isMaximumTooLong(const std::vector<Side> & sides)
+static bool isMaximumTooLong(const Album & sides)
 {
     const auto count{sides.size() - 1};
     if (count <= 0)
         return false;
 
     // Calculate the standard deviation of all side lengths.
-    if (deviation(sides) > 10.0)
+    if (sides.deviation() > 10.0)
          return true;
 
     return false;
@@ -131,9 +130,9 @@ int splitTracksAcrossSides(std::vector<Track> & tracks)
     size_t duration{Configuration::getDuration()};      // Get user requested maximum side length.
     const size_t boxes{Configuration::getBoxes()};      // Get user requested number of sides (boxes).
 
-    std::vector<Side> sides{};  // The list of sides containing a list of tracks.
-    size_t optimum{};           // The number of sides required.
-    size_t length{};            // The minimum side length.
+    Album sides{};      // The list of sides containing a list of tracks.
+    size_t optimum{};   // The number of sides required.
+    size_t length{};    // The minimum side length.
 
     if (duration)
     {
@@ -231,8 +230,7 @@ int splitTracksAcrossSides(std::vector<Track> & tracks)
     if (!csv)
         std::cout << "\nThe recommended sides are\n";
 
-    for (const auto & side : sides)
-        side.stream(std::cout, Configuration::isPlain(), csv);
+    sides.stream(std::cout, Configuration::isPlain(), csv);
 
     return 0;
 }

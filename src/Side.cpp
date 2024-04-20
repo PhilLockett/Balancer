@@ -24,6 +24,8 @@
  * Basic utility code for the Balancer.
  */
 
+#include <iostream>
+
 #include "Side.h"
 #include "Utilities.h"
 #include "Configuration.h"
@@ -140,3 +142,62 @@ bool Side::stream(std::ostream & os, bool plain, bool csv) const
     return true;
 }
 
+
+/**
+ * @section Define Album class.
+ *
+ */
+
+void Album::push(const Side & side)
+{
+    sides.push_back(side);
+    seconds += side.getValue();
+}
+
+void Album::pop()
+{
+    seconds -= sides.back().getValue();
+    sides.pop_back();
+}
+
+
+/**
+ * @brief Calculate the standard deviation of the lengths of the list of sides.
+ * 
+ * @return double the calculated the standard deviation.
+ */
+double Album::deviation(void) const
+{
+    // Calculate total play time.
+    auto lambdaSum = [](size_t a, const Side & b) { return a + b.getValue(); };
+    size_t total = std::accumulate(sides.begin(), sides.end(), 0, lambdaSum);
+    // std::cout << "total " << total << "\n";
+
+    double mean{(double)total / sides.size()};
+    // std::cout << "mean " << mean << "\n";
+
+    auto lambdaVariance = [mean](double a, const Side & b) { return a + std::pow((mean - b.getValue()), 2); };
+    double variance = std::accumulate(sides.begin(), sides.end(), 0.0, lambdaVariance);
+    // std::cout << "variance " << variance << "\n";
+    variance /= sides.size();
+    // std::cout << "variance " << variance << "\n";
+
+    return std::sqrt(variance);
+}
+
+std::string Album::toString(bool plain, bool csv) const
+{
+    std::string s{};
+    for (const auto & side : sides)
+        s += side.toString(plain, csv) + "\n";
+
+    return s;
+}
+
+bool Album::stream(std::ostream & os, bool plain, bool csv) const
+{
+    for (const auto & side : sides)
+        side.stream(std::cout, plain, csv);
+
+    return true;
+}
