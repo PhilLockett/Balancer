@@ -73,7 +73,7 @@ int init(int argc, char *argv[])
  *
  */
 extern int shuffleTracksAcrossSides(Side & tracks);
-extern int splitTracksAcrossSides(Side & tracks);
+extern int splitTracksAcrossSides(void);
 
 /**
  * @brief System entry point.
@@ -95,13 +95,13 @@ int main(int argc, char *argv[])
     }
 
 //- If all is well, read track list file and generate the output.
-    Side tracks{buildTrackListFromInputFile(Configuration::getInputFile())};
-
     if (Configuration::isShuffle())
     {
+        Side tracks{buildTrackListFromInputFile(Configuration::getInputFile())};
+
         return shuffleTracksAcrossSides(tracks);
     }
 
-    return splitTracksAcrossSides(tracks);
+    return splitTracksAcrossSides();
 }
 

@@ -94,7 +94,13 @@ void Side::push(const Track & track)
     seconds += track.getValue();
 }
 
-void Side::pop()
+void Side::push(size_t secs, const std::string & ttl)
+{
+    tracks.emplace_back(secs, ttl);
+    seconds += secs;
+}
+
+void Side::pop(void)
 {
     seconds -= tracks.back().getValue();
     tracks.pop_back();

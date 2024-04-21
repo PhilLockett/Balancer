@@ -40,9 +40,10 @@ class Track
 {
 public:
     Track(const std::string & line);
+    Track(size_t secs, const std::string & ttl) : title{ttl}, seconds{secs} {}
 
-    std::string getTitle() const { return title; }
-    size_t getValue() const { return seconds; }
+    std::string getTitle(void) const { return title; }
+    size_t getValue(void) const { return seconds; }
 
     std::string toString(bool plain=false, bool csv=false) const;
     bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
@@ -64,14 +65,15 @@ public:
     using CIterator = std::vector<Track>::const_iterator;
     using Iterator = std::vector<Track>::iterator;
 
-    Side() : title{}, seconds{} {}
+    Side(void) : title{}, seconds{} {}
 
     void setTitle(const std::string & t) { title = t; }
     void reserve(size_t len) { tracks.reserve(len); }
 
     void emplace_back(const std::string & line) { Track track(line); push(track); }
     void push(const Track & track);
-    void pop();
+    void push(size_t secs, const std::string & ttl);
+    void pop(void);
 
     std::string getTitle() const { return title; }
     size_t getValue() const { return seconds; }
@@ -87,7 +89,7 @@ public:
     std::string toString(bool plain=false, bool csv=false) const;
     bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
 
-    void clear() { seconds = 0; tracks.clear(); }
+    void clear(void) { seconds = 0; tracks.clear(); }
 
 private:
     std::string title;
@@ -107,17 +109,17 @@ class Album
 public:
     using Iterator = std::vector<Side>::const_iterator;
 
-    Album() : title{}, seconds{} {}
+    Album(void) : title{}, seconds{} {}
 
     void setTitle(const std::string & t) { title = t; }
     void reserve(size_t len) { sides.reserve(len); }
     void push(const Side & side);
-    void pop();
+    void pop(void);
 
     double deviation(void) const;
 
-    std::string getTitle() const { return title; }
-    size_t getValue() const { return seconds; }
+    std::string getTitle(void) const { return title; }
+    size_t getValue(void) const { return seconds; }
 
     size_t size(void) const { return sides.size(); }
     Iterator begin(void) const { return sides.begin(); }
@@ -126,7 +128,7 @@ public:
     std::string toString(bool plain=false, bool csv=false) const;
     bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
 
-    void clear() { seconds = 0; sides.clear(); }
+    void clear(void) { seconds = 0; for (auto item : sides) item.clear(); sides.clear(); }
 
 private:
     std::string title;

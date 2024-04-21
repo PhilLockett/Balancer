@@ -32,6 +32,28 @@
 
 #include "Utilities.h"
 
+
+/**
+ * @section Define Item class.
+ *
+ */
+
+class Item
+{
+public:
+    Item(const std::string & line);
+
+    const std::string & getTitle(void) const { return title; }
+    size_t getValue(void) const { return seconds; }
+
+    bool streamItem(std::ostream & os) const;
+
+private:
+    std::string title;
+    size_t seconds;
+};
+
+
 /**
  * @section Balancer configuration data.
  *
@@ -78,6 +100,7 @@ private:
     int version(void) const;
     int parseCommandLine(int argc, char *argv[]);
     int setUp(int argc, char *argv[]);
+    int loadTracks(void);
 
 public:
 //- Delete the copy constructor and assignement operator.
@@ -103,6 +126,34 @@ public:
 
     static bool isValid(bool showErrors = false);
 
+
+//- Item list support.
+private:
+    std::vector<Item> items;
+
+public:
+    using Iterator = std::vector<Item>::const_iterator;
+
+    size_t size(void) const { return items.size(); }
+    bool isValidIndex(size_t index) const { return index < size(); }
+
+    static size_t merge(size_t index, size_t value) { return index << 32 | value & 0xFFFFFFFF; }
+    static size_t sepIndex(size_t ref) { return ref >> 32; }
+    static size_t sepValue(size_t ref) { return ref & 0xFFFFFFFF; }
+
+    const std::string & getLabel(size_t index) const { return items[index].getTitle(); }
+    size_t getValue(size_t index) const { return items[index].getValue(); }
+    size_t getRef(size_t index) const { return merge(index, getValue(index)); }
+    const std::string & getLabelFromRef(size_t ref) const { return getLabel(sepIndex(ref)); }
+    static size_t getValueFromRef(size_t ref) { return sepValue(ref); }
+
+    const Item& operator[](size_t index) const { return items[index]; }
+    Iterator begin(void) const { return items.begin(); }
+    Iterator end(void) const { return items.end(); }
+
+    bool streamItems(std::ostream & os) const;
+
 };
+
 
 #endif //!defined _CONFIGURATION_H_INCLUDED_

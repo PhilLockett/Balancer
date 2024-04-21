@@ -37,20 +37,19 @@
  * @brief Splits a list of tracks across multiple sides using the upper side
  * length limit of 'duration'.
  * 
- * @param tracks to split across sides.
  * @param duration limit of a side.
  * @return Album list of sides containing the tracks.
  */
-static Album addTracksToSides(const Side & tracks, size_t duration)
+static Album addTracksToSides(size_t duration)
 {
     // std::cout << "Add tracks to sides\n";
     Album sides{};
     Side side{};
-    for (const Track & track : tracks)
+    for (const Item & item : Configuration::instance())
     {
-        if (side.getValue() + track.getValue() <= duration)
+        if (side.getValue() + item.getValue() <= duration)
         {
-            side.push(track);
+            side.push(item.getValue(), item.getTitle());
         }
         else
         {
@@ -59,7 +58,7 @@ static Album addTracksToSides(const Side & tracks, size_t duration)
             side.setTitle(title);
             sides.push(side);
             side.clear();
-            side.push(track);
+            side.push(item.getValue(), item.getTitle());
         }
     }
     if (side.size() != 0)
@@ -118,13 +117,13 @@ static bool isMaximumTooLong(const Album & sides)
  * 
  * @return int error value of 0.
  */
-int splitTracksAcrossSides(Side & tracks)
+int splitTracksAcrossSides(void)
 {
     const auto showDebug{Configuration::isDebug()};
 
     // Calculate total play time.
-    auto lambda = [](size_t a, const Track & b) { return a + b.getValue(); };
-    const size_t total = std::accumulate(tracks.begin(), tracks.end(), 0, lambda);
+    auto lambda = [](size_t a, const Item & b) { return a + b.getValue(); };
+    const size_t total = std::accumulate(Configuration::instance().begin(), Configuration::instance().end(), 0, lambda);
 
     const size_t timeout{Configuration::getTimeout()};  // Get user requested timeout.
     size_t duration{Configuration::getDuration()};      // Get user requested maximum side length.
@@ -136,7 +135,7 @@ int splitTracksAcrossSides(Side & tracks)
 
     if (duration)
     {
-        sides = addTracksToSides(tracks, duration); // Calculate 'packed' sides -> minimum sides needed.
+        sides = addTracksToSides(duration); // Calculate 'packed' sides -> minimum sides needed.
 
         // Calculate number of sides required.
         optimum = sides.size();
@@ -150,8 +149,8 @@ int splitTracksAcrossSides(Side & tracks)
         optimum = boxes;
         length = total / optimum;       // Calculate minimum side length.
 
-        auto comp = [](const Track & a, const Track & b) { return a.getValue() < b.getValue(); };
-        auto max = std::max_element(tracks.begin(), tracks.end(), comp);
+        auto comp = [](const Item & a, const Item & b) { return a.getValue() < b.getValue(); };
+        auto max = std::max_element(Configuration::instance().begin(), Configuration::instance().end(), comp);
 
         duration = length + (*max).getValue();
     }
@@ -179,7 +178,7 @@ int splitTracksAcrossSides(Side & tracks)
             std::cout << "\nSuggested length " << secondsToTimeString(median) << "\n";
 
         sides.clear();
-        sides = addTracksToSides(tracks, median);
+        sides = addTracksToSides(median);
 
         if (showDebug)
         {

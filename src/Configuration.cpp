@@ -29,6 +29,52 @@
 
 #include "Opts.h"
 #include "Configuration.h"
+#include "TextFile.h"
+
+
+/**
+ * @section Define Item class.
+ *
+ */
+
+Item::Item(const std::string & line)
+{
+    // Get duration string from the beginning of the line.
+    auto pos = line.find_first_of(whitespace);
+    if (pos == std::string::npos)
+        return;
+
+    std::string duration(line, 0, pos);
+    seconds = timeStringToSeconds(duration);
+
+    // Get track title from whatever is after duration.
+    pos = line.find_first_not_of(whitespace, pos);
+    if (pos == std::string::npos)
+        return;
+
+    title = line.substr(pos);
+}
+
+bool Item::streamItem(std::ostream & os) const
+{
+    const std::string time{secondsToTimeString(seconds)};
+
+    os << "  " << time << " - " << title << "\n";
+
+    return true;
+}
+
+bool Configuration::streamItems(std::ostream & os) const
+{
+    os << "items:\n";
+
+    for (const auto & item : items)
+        item.streamItem(os);
+
+    os << "\n";
+
+    return true;
+}
 
 
 /**
@@ -140,6 +186,22 @@ int Configuration::parseCommandLine(int argc, char *argv[])
     return 0;
 }
 
+/**
+ * @brief Load the input file into items vector.
+ * 
+ * @return int error value or 0 if no errors.
+ */
+int Configuration::loadTracks(void)
+{
+    TextFile input{inputFile};
+    input.read();
+
+    items.reserve(input.size());
+    for (const auto & line : input)
+        items.emplace_back(line);
+
+    return 0;
+}
 
 /**
  * @brief Set Up 'Balancer' using command line input. Here we parse the Command 
@@ -151,14 +213,14 @@ int Configuration::parseCommandLine(int argc, char *argv[])
  */
 int Configuration::setUp(int argc, char *argv[])
 {
-    int ret{parseCommandLine(argc, argv)};
+    const int ret{parseCommandLine(argc, argv)};
     if (ret != 0)
         return ret;
 
     if (!isValid(true))
         return -1;
 
-    return ret;
+    return loadTracks();
 }
 
 
