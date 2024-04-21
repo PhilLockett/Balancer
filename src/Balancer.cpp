@@ -64,11 +64,6 @@ int init(int argc, char *argv[])
     std::cout << Configuration::instance() << '\n';
 #endif
 
-    if (!Configuration::isValid(true))
-    {
-        return -1;
-    }
-
     return 0;
 }
 
@@ -92,11 +87,11 @@ int main(int argc, char *argv[])
     const int i{init(argc, argv)};
     if (i < 0)      // Error?
     {
-        return 1;
+        return 1;   // Abort with Error!
     }
     else if (i > 0) // No further processing?
     {
-        return 0;
+        return 0;   // Done!
     }
 
 //- If all is well, read track list file and generate the output.

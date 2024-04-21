@@ -77,6 +77,7 @@ private:
     int help(const std::string & error) const;
     int version(void) const;
     int parseCommandLine(int argc, char *argv[]);
+    int setUp(int argc, char *argv[]);
 
 public:
 //- Delete the copy constructor and assignement operator.

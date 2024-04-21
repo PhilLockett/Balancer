@@ -142,6 +142,27 @@ int Configuration::parseCommandLine(int argc, char *argv[])
 
 
 /**
+ * @brief Set Up 'Balancer' using command line input. Here we parse the Command 
+ * Line and if valid, load the input file.
+ * 
+ * @param argc command line argument count.
+ * @param argv command line argument vector.
+ * @return int error value or 0 if no errors.
+ */
+int Configuration::setUp(int argc, char *argv[])
+{
+    int ret{parseCommandLine(argc, argv)};
+    if (ret != 0)
+        return ret;
+
+    if (!isValid(true))
+        return -1;
+
+    return ret;
+}
+
+
+/**
  * @brief Initialise 'Balancer' using command line input and ensure we only
  * do it once.
  * 
@@ -154,7 +175,7 @@ int Configuration::initialise(int argc, char *argv[])
     static std::once_flag virgin;
     int ret = 0;
 
-    std::call_once(virgin, [&](){ ret = parseCommandLine(argc, argv); });
+    std::call_once(virgin, [&](){ ret = setUp(argc, argv); });
 
     return ret;
 }
