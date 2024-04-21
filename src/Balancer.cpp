@@ -41,34 +41,6 @@
 
 
 /**
- * @section Process the command line parameters.
- *
- */
-
-/**
- * @brief Process the command line parameters.
- * 
- * @param argc command line argument count.
- * @param argv command line argument vector.
- * @return int error value or 0 if no errors.
- */
-int init(int argc, char *argv[])
-{
-    int i = Configuration::instance().initialise(argc, argv);
-    if (i != 0)
-    {
-        return i;
-    }
-
-#if 0
-    std::cout << Configuration::instance() << '\n';
-#endif
-
-    return 0;
-}
-
-
-/**
  * @section System entry point.
  *
  */
@@ -84,7 +56,7 @@ extern int splitTracksAcrossSides(void);
  */
 int main(int argc, char *argv[])
 {
-    const int i{init(argc, argv)};
+    const int i{Configuration::instance().initialise(argc, argv)};
     if (i < 0)      // Error?
     {
         return 1;   // Abort with Error!
@@ -93,6 +65,10 @@ int main(int argc, char *argv[])
     {
         return 0;   // Done!
     }
+
+#if 0
+    std::cout << Configuration::instance() << '\n';
+#endif
 
 //- If all is well, read track list file and generate the output.
     if (Configuration::isShuffle())
