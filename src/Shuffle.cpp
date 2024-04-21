@@ -100,7 +100,7 @@ T Indexer<T>::inc()
 class SideRef
 {
 public:
-    SideRef(const Side & trackList) : seconds{}, tracks{trackList} {}
+    SideRef(void) : seconds{} {}
 
     void push(size_t);
     void pop();
@@ -114,7 +114,6 @@ public:
 
 private:
     size_t seconds;
-    const Side & tracks;
     std::vector<size_t> trackRefs;
 
 };
@@ -122,12 +121,12 @@ private:
 void SideRef::push(size_t track)
 {
     trackRefs.push_back(track);
-    seconds += tracks[track].getValue();
+    seconds += Configuration::instance().getValue(track);
 }
 
 void SideRef::pop()
 {
-    seconds -= tracks[trackRefs.back()].getValue();
+    seconds -= Configuration::instance().getValue(trackRefs.back());
     trackRefs.pop_back();
 }
 
@@ -142,7 +141,7 @@ class Finder
 public:
     using Iterator = std::vector<SideRef>::const_iterator;
 
-    Finder(const Side &, const size_t, const size_t, const size_t);
+    Finder(const size_t, const size_t, const size_t);
 
     bool addTracksToSides(void);
     bool isSuccessful(void) const { return success; }
@@ -168,7 +167,6 @@ private:
     int sideIndex;
     bool success;
 
-    const Side & tracks;
     std::vector<SideRef> sides;
 
     double dev;
@@ -176,14 +174,14 @@ private:
     Timer timer;
 };
 
-Finder::Finder(const Side & trackList, const size_t dur, const size_t tim, const size_t count) :
-    duration{dur}, sideCount{count}, trackCount{trackList.size()},
-    forward{true}, trackIndex{}, sideIndex{}, success{}, tracks{trackList}, sides{},
+Finder::Finder(const size_t dur, const size_t tim, const size_t count) :
+    duration{dur}, sideCount{count}, trackCount{Configuration::instance().size()},
+    forward{true}, trackIndex{}, sideIndex{}, success{}, sides{},
     dev{std::numeric_limits<double>::max()}, best{}, timer{tim}
 {
     sides.reserve(sideCount);
     best.reserve(sideCount);
-    SideRef side{trackList};
+    SideRef side{};
     for (int i = 0; i < sideCount; ++i)
         sides.push_back(side);
 }
@@ -216,9 +214,8 @@ bool Finder::look(int trackIndex)
     Indexer side{trackIndex, (int)sideCount};
     for (int i = 0; i < sideCount; ++i, side.inc())
     {
-        auto & trackRef{tracks[trackIndex]};
         auto & sideRef{sides[side()]};
-        if (sideRef.getValue() + trackRef.getValue() <= duration)
+        if (sideRef.getValue() + Configuration::instance().getValue(trackIndex) <= duration)
         {
             sideRef.push(trackIndex);
             look(trackIndex+1);
@@ -249,7 +246,7 @@ bool Finder::show(std::ostream & os) const
     {
         size_t total{};
         for (const auto & track : side)
-            total += tracks[track].getValue();
+            total += Configuration::instance().getValue(track);
         os << "Side " << std::to_string(++i) << " - " << side.size() << " tracks " << secondsToTimeString(total) << "\n";
     }
 
@@ -258,10 +255,10 @@ bool Finder::show(std::ostream & os) const
 
 std::string Finder::trackToString(size_t track, bool plain, bool csv) const
 {
-    const size_t seconds{tracks[track].getValue()};
+    const size_t seconds{Configuration::instance().getValue(track)};
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
-    const std::string title{tracks[track].getTitle()};
+    const std::string & title{Configuration::instance().getLabel(track)};
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
@@ -276,7 +273,7 @@ std::string Finder::sideToString(const std::vector<size_t> & side, const std::st
 {
     size_t seconds{};
     for (const auto & track : side)
-        seconds += tracks[track].getValue();
+        seconds += Configuration::instance().getValue(track);
 
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
@@ -310,17 +307,13 @@ bool Finder::showAll(std::ostream & os, bool plain, bool csv) const
 }
 
 
-int shuffleTracksAcrossSides(Side & tracks)
+int shuffleTracksAcrossSides(void)
 {
     const auto showDebug{Configuration::isDebug()};
 
-    // Sort track list, longest to shortest.
-    auto comp = [](const Track & a, const Track & b) { return a.getValue() > b.getValue(); };
-    std::sort(tracks.begin(), tracks.end(), comp);
-
     // Calculate total play time.
-    auto lambda = [](size_t a, const Track & b) { return a + b.getValue(); };
-    size_t total = std::accumulate(tracks.begin(), tracks.end(), 0, lambda);
+    auto lambda = [](size_t a, const Item & b) { return a + b.getValue(); };
+    size_t total = std::accumulate(Configuration::instance().begin(), Configuration::instance().end(), 0, lambda);
 
     const size_t timeout{Configuration::getTimeout()};  // Get user requested timeout.
     size_t duration{Configuration::getDuration()};      // Get user requested maximum side length.
@@ -345,7 +338,7 @@ int shuffleTracksAcrossSides(Side & tracks)
         optimum = boxes;
         length = total / optimum;       // Calculate minimum side length.
 
-        duration = length + (*tracks.begin()).getValue();
+        duration = length + (*Configuration::instance().begin()).getValue();
     }
 
     if (showDebug)
@@ -357,7 +350,7 @@ int shuffleTracksAcrossSides(Side & tracks)
         std::cout << "Minimum side length " << secondsToTimeString(length) << "\n";
     }
 
-    Finder find{tracks, duration, timeout, optimum};
+    Finder find{duration, timeout, optimum};
     find.addTracksToSides();
     if (find.isSuccessful())
     {

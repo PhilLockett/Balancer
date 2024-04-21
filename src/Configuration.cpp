@@ -200,6 +200,13 @@ int Configuration::loadTracks(void)
     for (const auto & line : input)
         items.emplace_back(line);
 
+    if (isShuffle())
+    {
+        // Sort track list, longest to shortest.
+        auto comp = [](const Item & a, const Item & b) { return a.getValue() > b.getValue(); };
+        std::sort(items.begin(), items.end(), comp);
+    }
+
     return 0;
 }
 

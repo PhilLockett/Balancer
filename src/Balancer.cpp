@@ -44,7 +44,7 @@
  * @section System entry point.
  *
  */
-extern int shuffleTracksAcrossSides(Side & tracks);
+extern int shuffleTracksAcrossSides(void);
 extern int splitTracksAcrossSides(void);
 
 /**
@@ -73,9 +73,7 @@ int main(int argc, char *argv[])
 //- If all is well, read track list file and generate the output.
     if (Configuration::isShuffle())
     {
-        Side tracks{buildTrackListFromInputFile(Configuration::getInputFile())};
-
-        return shuffleTracksAcrossSides(tracks);
+        return shuffleTracksAcrossSides();
     }
 
     return splitTracksAcrossSides();
