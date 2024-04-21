@@ -121,12 +121,12 @@ private:
 void SideRef::push(size_t track)
 {
     trackRefs.push_back(track);
-    seconds += Configuration::instance().getValue(track);
+    seconds += Configuration::getValue(track);
 }
 
 void SideRef::pop()
 {
-    seconds -= Configuration::instance().getValue(trackRefs.back());
+    seconds -= Configuration::getValue(trackRefs.back());
     trackRefs.pop_back();
 }
 
@@ -175,7 +175,7 @@ private:
 };
 
 Finder::Finder(const size_t dur, const size_t tim, const size_t count) :
-    duration{dur}, sideCount{count}, trackCount{Configuration::instance().size()},
+    duration{dur}, sideCount{count}, trackCount{Configuration::size()},
     forward{true}, trackIndex{}, sideIndex{}, success{}, sides{},
     dev{std::numeric_limits<double>::max()}, best{}, timer{tim}
 {
@@ -215,7 +215,7 @@ bool Finder::look(int trackIndex)
     for (int i = 0; i < sideCount; ++i, side.inc())
     {
         auto & sideRef{sides[side()]};
-        if (sideRef.getValue() + Configuration::instance().getValue(trackIndex) <= duration)
+        if (sideRef.getValue() + Configuration::getValue(trackIndex) <= duration)
         {
             sideRef.push(trackIndex);
             look(trackIndex+1);
@@ -246,7 +246,7 @@ bool Finder::show(std::ostream & os) const
     {
         size_t total{};
         for (const auto & track : side)
-            total += Configuration::instance().getValue(track);
+            total += Configuration::getValue(track);
         os << "Side " << std::to_string(++i) << " - " << side.size() << " tracks " << secondsToTimeString(total) << "\n";
     }
 
@@ -255,10 +255,10 @@ bool Finder::show(std::ostream & os) const
 
 std::string Finder::trackToString(size_t track, bool plain, bool csv) const
 {
-    const size_t seconds{Configuration::instance().getValue(track)};
+    const size_t seconds{Configuration::getValue(track)};
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
-    const std::string & title{Configuration::instance().getLabel(track)};
+    const std::string & title{Configuration::getLabel(track)};
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
@@ -273,7 +273,7 @@ std::string Finder::sideToString(const std::vector<size_t> & side, const std::st
 {
     size_t seconds{};
     for (const auto & track : side)
-        seconds += Configuration::instance().getValue(track);
+        seconds += Configuration::getValue(track);
 
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
@@ -313,7 +313,7 @@ int shuffleTracksAcrossSides(void)
 
     // Calculate total play time.
     auto lambda = [](size_t a, const Item & b) { return a + b.getValue(); };
-    size_t total = std::accumulate(Configuration::instance().begin(), Configuration::instance().end(), 0, lambda);
+    size_t total = std::accumulate(Configuration::begin(), Configuration::end(), 0, lambda);
 
     const size_t timeout{Configuration::getTimeout()};  // Get user requested timeout.
     size_t duration{Configuration::getDuration()};      // Get user requested maximum side length.
@@ -338,7 +338,7 @@ int shuffleTracksAcrossSides(void)
         optimum = boxes;
         length = total / optimum;       // Calculate minimum side length.
 
-        duration = length + (*Configuration::instance().begin()).getValue();
+        duration = length + (*Configuration::begin()).getValue();
     }
 
     if (showDebug)

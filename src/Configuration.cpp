@@ -64,11 +64,11 @@ bool Item::streamItem(std::ostream & os) const
     return true;
 }
 
-bool Configuration::streamItems(std::ostream & os) const
+bool Configuration::streamItems(std::ostream & os)
 {
     os << "items:\n";
 
-    for (const auto & item : items)
+    for (const auto & item : instance())
         item.streamItem(os);
 
     os << "\n";

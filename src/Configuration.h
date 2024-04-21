@@ -134,24 +134,24 @@ private:
 public:
     using Iterator = std::vector<Item>::const_iterator;
 
-    size_t size(void) const { return items.size(); }
-    bool isValidIndex(size_t index) const { return index < size(); }
+    static size_t size(void) { return instance().items.size(); }
+    static bool isValidIndex(size_t index) { return index < instance().size(); }
 
     static size_t merge(size_t index, size_t value) { return index << 32 | value & 0xFFFFFFFF; }
     static size_t sepIndex(size_t ref) { return ref >> 32; }
     static size_t sepValue(size_t ref) { return ref & 0xFFFFFFFF; }
 
-    const std::string & getLabel(size_t index) const { return items[index].getTitle(); }
-    size_t getValue(size_t index) const { return items[index].getValue(); }
-    size_t getRef(size_t index) const { return merge(index, getValue(index)); }
-    const std::string & getLabelFromRef(size_t ref) const { return getLabel(sepIndex(ref)); }
+    static const std::string & getLabel(size_t index) { return instance().items[index].getTitle(); }
+    static size_t getValue(size_t index) { return instance().items[index].getValue(); }
+
+    static size_t getRef(size_t index) { return merge(index, instance().getValue(index)); }
+    static const std::string & getLabelFromRef(size_t ref) { return instance().getLabel(sepIndex(ref)); }
     static size_t getValueFromRef(size_t ref) { return sepValue(ref); }
 
-    const Item& operator[](size_t index) const { return items[index]; }
-    Iterator begin(void) const { return items.begin(); }
-    Iterator end(void) const { return items.end(); }
+    static Iterator begin(void) { return instance().items.begin(); }
+    static Iterator end(void) { return instance().items.end(); }
 
-    bool streamItems(std::ostream & os) const;
+    static bool streamItems(std::ostream & os);
 
 };
 

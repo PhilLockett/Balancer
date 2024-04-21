@@ -123,7 +123,7 @@ int splitTracksAcrossSides(void)
 
     // Calculate total play time.
     auto lambda = [](size_t a, const Item & b) { return a + b.getValue(); };
-    const size_t total = std::accumulate(Configuration::instance().begin(), Configuration::instance().end(), 0, lambda);
+    const size_t total = std::accumulate(Configuration::begin(), Configuration::end(), 0, lambda);
 
     const size_t timeout{Configuration::getTimeout()};  // Get user requested timeout.
     size_t duration{Configuration::getDuration()};      // Get user requested maximum side length.
@@ -150,7 +150,7 @@ int splitTracksAcrossSides(void)
         length = total / optimum;       // Calculate minimum side length.
 
         auto comp = [](const Item & a, const Item & b) { return a.getValue() < b.getValue(); };
-        auto max = std::max_element(Configuration::instance().begin(), Configuration::instance().end(), comp);
+        auto max = std::max_element(Configuration::begin(), Configuration::end(), comp);
 
         duration = length + (*max).getValue();
     }
