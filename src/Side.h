@@ -39,7 +39,7 @@
 class Track
 {
 public:
-    Track(std::string line);
+    Track(const std::string & line);
 
     std::string getTitle() const { return title; }
     size_t getValue() const { return seconds; }
@@ -61,18 +61,26 @@ private:
 class Side
 {
 public:
-    using Iterator = std::vector<Track>::const_iterator;
+    using CIterator = std::vector<Track>::const_iterator;
+    using Iterator = std::vector<Track>::iterator;
 
     Side() : title{}, seconds{} {}
 
     void setTitle(const std::string & t) { title = t; }
+    void reserve(size_t len) { tracks.reserve(len); }
+
+    void emplace_back(const std::string & line) { Track track(line); push(track); }
     void push(const Track & track);
     void pop();
 
     std::string getTitle() const { return title; }
     size_t getValue() const { return seconds; }
 
+    Track& operator[](std::size_t idx) { return tracks[idx]; }
+    const Track& operator[](std::size_t idx) const { return tracks[idx]; }
     size_t size(void) const { return tracks.size(); }
+    CIterator begin(void) const { return tracks.begin(); }
+    CIterator end(void) const { return tracks.end(); }
     Iterator begin(void) { return tracks.begin(); }
     Iterator end(void) { return tracks.end(); }
 
@@ -102,6 +110,7 @@ public:
     Album() : title{}, seconds{} {}
 
     void setTitle(const std::string & t) { title = t; }
+    void reserve(size_t len) { sides.reserve(len); }
     void push(const Side & side);
     void pop();
 
@@ -111,8 +120,8 @@ public:
     size_t getValue() const { return seconds; }
 
     size_t size(void) const { return sides.size(); }
-    Iterator begin(void) { return sides.begin(); }
-    Iterator end(void) { return sides.end(); }
+    Iterator begin(void) const { return sides.begin(); }
+    Iterator end(void) const { return sides.end(); }
 
     std::string toString(bool plain=false, bool csv=false) const;
     bool stream(std::ostream & os, bool plain=false, bool csv=false) const;

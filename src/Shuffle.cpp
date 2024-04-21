@@ -100,7 +100,7 @@ T Indexer<T>::inc()
 class SideRef
 {
 public:
-    SideRef(const std::vector<Track> & trackList) : seconds{}, tracks{trackList} {}
+    SideRef(const Side & trackList) : seconds{}, tracks{trackList} {}
 
     void push(size_t);
     void pop();
@@ -114,7 +114,7 @@ public:
 
 private:
     size_t seconds;
-    const std::vector<Track> & tracks;
+    const Side & tracks;
     std::vector<size_t> trackRefs;
 
 };
@@ -142,7 +142,7 @@ class Finder
 public:
     using Iterator = std::vector<SideRef>::const_iterator;
 
-    Finder(const std::vector<Track> &, const size_t, const size_t, const size_t);
+    Finder(const Side &, const size_t, const size_t, const size_t);
 
     bool addTracksToSides(void);
     bool isSuccessful(void) const { return success; }
@@ -168,7 +168,7 @@ private:
     int sideIndex;
     bool success;
 
-    const std::vector<Track> & tracks;
+    const Side & tracks;
     std::vector<SideRef> sides;
 
     double dev;
@@ -176,7 +176,7 @@ private:
     Timer timer;
 };
 
-Finder::Finder(const std::vector<Track> & trackList, const size_t dur, const size_t tim, const size_t count) :
+Finder::Finder(const Side & trackList, const size_t dur, const size_t tim, const size_t count) :
     duration{dur}, sideCount{count}, trackCount{trackList.size()},
     forward{true}, trackIndex{}, sideIndex{}, success{}, tracks{trackList}, sides{},
     dev{std::numeric_limits<double>::max()}, best{}, timer{tim}
@@ -310,7 +310,7 @@ bool Finder::showAll(std::ostream & os, bool plain, bool csv) const
 }
 
 
-int shuffleTracksAcrossSides(std::vector<Track> & tracks)
+int shuffleTracksAcrossSides(Side & tracks)
 {
     const auto showDebug{Configuration::isDebug()};
 

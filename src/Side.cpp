@@ -36,7 +36,7 @@
  *
  */
 
-Track::Track(std::string line)
+Track::Track(const std::string & line)
 {
     // Get duration string from the beginning of the line.
     auto pos = line.find_first_of(whitespace);

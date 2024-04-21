@@ -102,12 +102,12 @@ std::string secondsToTimeString(size_t seconds, const std::string & sep)
  * @param inputFile Name of input file.
  * @return std::vector<Track> input file represented as a list of Tracks
  */
-std::vector<Track> buildTrackListFromInputFile(const std::filesystem::path & inputFile)
+Side buildTrackListFromInputFile(const std::filesystem::path & inputFile)
 {
     TextFile input{inputFile};
     input.read();
 
-    std::vector<Track> tracks{};
+    Side tracks{};
     tracks.reserve(input.size());
 
     for (const auto & line : input)

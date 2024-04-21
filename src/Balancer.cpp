@@ -77,8 +77,8 @@ int init(int argc, char *argv[])
  * @section System entry point.
  *
  */
-extern int shuffleTracksAcrossSides(std::vector<Track> & tracks);
-extern int splitTracksAcrossSides(std::vector<Track> & tracks);
+extern int shuffleTracksAcrossSides(Side & tracks);
+extern int splitTracksAcrossSides(Side & tracks);
 
 /**
  * @brief System entry point.
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
     }
 
 //- If all is well, read track list file and generate the output.
-    std::vector<Track> tracks{buildTrackListFromInputFile(Configuration::getInputFile())};
+    Side tracks{buildTrackListFromInputFile(Configuration::getInputFile())};
 
     if (Configuration::isShuffle())
     {

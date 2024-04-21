@@ -41,12 +41,12 @@
  * @param duration limit of a side.
  * @return Album list of sides containing the tracks.
  */
-static Album addTracksToSides(const std::vector<Track> & tracks, size_t duration)
+static Album addTracksToSides(const Side & tracks, size_t duration)
 {
     // std::cout << "Add tracks to sides\n";
-    Album sides;
+    Album sides{};
     Side side{};
-    for (const auto & track : tracks)
+    for (const Track & track : tracks)
     {
         if (side.getValue() + track.getValue() <= duration)
         {
@@ -118,7 +118,7 @@ static bool isMaximumTooLong(const Album & sides)
  * 
  * @return int error value of 0.
  */
-int splitTracksAcrossSides(std::vector<Track> & tracks)
+int splitTracksAcrossSides(Side & tracks)
 {
     const auto showDebug{Configuration::isDebug()};
 

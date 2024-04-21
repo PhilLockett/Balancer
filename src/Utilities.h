@@ -45,7 +45,7 @@ extern const std::string digit;
 
 extern size_t timeStringToSeconds(std::string buffer);
 extern std::string secondsToTimeString(size_t seconds, const std::string & sep = ":");
-extern std::vector<Track> buildTrackListFromInputFile(const std::filesystem::path & inputFile);
+extern Side buildTrackListFromInputFile(const std::filesystem::path & inputFile);
 
 /**
  * @brief Calculate the standard deviation of the lengths of the given list of
