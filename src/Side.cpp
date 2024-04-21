@@ -43,8 +43,7 @@ Track::Track(const std::string & line)
     if (pos == std::string::npos)
         return;
 
-    std::string duration(line);
-    duration.resize(pos);
+    std::string duration(line, 0, pos);
     seconds = timeStringToSeconds(duration);
 
     // Get track title from whatever is after duration.
