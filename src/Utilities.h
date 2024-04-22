@@ -34,7 +34,7 @@
 #include <cmath>
 #include <numeric>
 
-#include "Side.h"
+class Side;
 
 /**
  * @section basic utility code.

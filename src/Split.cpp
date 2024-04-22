@@ -49,7 +49,7 @@ static Album addTracksToSides(size_t duration)
     {
         if (side.getValue() + item.getValue() <= duration)
         {
-            side.push(item.getValue(), item.getLabel());
+            side.push(item.getRef());
         }
         else
         {
@@ -58,7 +58,7 @@ static Album addTracksToSides(size_t duration)
             side.setTitle(title);
             album.push(side);
             side.clear();
-            side.push(item.getValue(), item.getLabel());
+            side.push(item.getRef());
         }
     }
     if (side.size() != 0)

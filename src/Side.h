@@ -30,6 +30,8 @@
 #include <string>
 #include <vector>
 
+#include "Configuration.h"
+
 
 /**
  * @section Define Track class.
@@ -39,18 +41,16 @@
 class Track
 {
 public:
-    Track(const std::string & line);
-    Track(size_t secs, const std::string & ttl) : title{ttl}, seconds{secs} {}
+    Track(size_t r) : ref{r} {}
 
-    std::string getTitle(void) const { return title; }
-    size_t getValue(void) const { return seconds; }
+    const std::string & getTitle(void) const { return Configuration::getLabelFromRef(ref); }
+    size_t getValue(void) const { return Configuration::getValueFromRef(ref); }
 
     std::string toString(bool plain=false, bool csv=false) const;
     bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
 
 private:
-    std::string title;
-    size_t seconds;
+    size_t ref;
 };
 
 
@@ -70,9 +70,8 @@ public:
     void setTitle(const std::string & t) { title = t; }
     void reserve(size_t len) { tracks.reserve(len); }
 
-    void emplace_back(const std::string & line) { Track track(line); push(track); }
     void push(const Track & track);
-    void push(size_t secs, const std::string & ttl);
+    void push(size_t ref);
     void pop(void);
 
     std::string getTitle() const { return title; }

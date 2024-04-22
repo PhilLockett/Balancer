@@ -36,47 +36,29 @@
  *
  */
 
-Track::Track(const std::string & line)
-{
-    // Get duration string from the beginning of the line.
-    auto pos = line.find_first_of(whitespace);
-    if (pos == std::string::npos)
-        return;
-
-    std::string duration(line, 0, pos);
-    seconds = timeStringToSeconds(duration);
-
-    // Get track title from whatever is after duration.
-    pos = line.find_first_not_of(whitespace, pos);
-    if (pos == std::string::npos)
-        return;
-
-    title = line.substr(pos);
-}
-
 std::string Track::toString(bool plain, bool csv) const
 {
-    std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
+    std::string time{plain ? std::to_string(getValue()) : secondsToTimeString(getValue())};
 
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
-        s = "Track" + c + time + c + "\"" + title + "\"";
+        s = "Track" + c + time + c + "\"" + getTitle() + "\"";
     else
-        s = time + " - " + title;
+        s = time + " - " + getTitle();
 
     return s;
 }
 
 bool Track::stream(std::ostream & os, bool plain, bool csv) const
 {
-    std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
+    std::string time{plain ? std::to_string(getValue()) : secondsToTimeString(getValue())};
 
     const std::string c{Configuration::getDelimiter()};
     if (csv)
-        os << "Track" << c << time << c << "\"" << title << "\"";
+        os << "Track" << c << time << c << "\"" << getTitle() << "\"";
     else
-        os << time << " - " << title;
+        os << time << " - " << getTitle();
     os << "\n";
 
     return true;
@@ -94,10 +76,10 @@ void Side::push(const Track & track)
     seconds += track.getValue();
 }
 
-void Side::push(size_t secs, const std::string & ttl)
+void Side::push(size_t ref)
 {
-    tracks.emplace_back(secs, ttl);
-    seconds += secs;
+    tracks.emplace_back(ref);
+    seconds += Configuration::getValueFromRef(ref);
 }
 
 void Side::pop(void)
