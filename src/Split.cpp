@@ -43,7 +43,7 @@
 static Album addTracksToSides(size_t duration)
 {
     // std::cout << "Add tracks to sides\n";
-    Album sides{};
+    Album album{};
     Side side{};
     for (const Item & item : Configuration::instance())
     {
@@ -53,24 +53,24 @@ static Album addTracksToSides(size_t duration)
         }
         else
         {
-            const auto count{sides.size() + 1};
+            const auto count{album.size() + 1};
             const std::string title{"Side " + std::to_string(count)};
             side.setTitle(title);
-            sides.push(side);
+            album.push(side);
             side.clear();
             side.push(item.getValue(), item.getTitle());
         }
     }
     if (side.size() != 0)
     {
-        const auto count{sides.size() + 1};
+        const auto count{album.size() + 1};
         const std::string title{"Side " + std::to_string(count)};
         side.setTitle(title);
-        sides.push(side);
+        album.push(side);
         side.clear();
     }
 
-    return sides;
+    return album;
 }
 
 /**
@@ -98,14 +98,14 @@ static bool isMinimumTooShort(size_t required, size_t current)
  * @param sides currently being considered.
  * @return true if last side doesn't hold enough tracks, false otherwise.
  */
-static bool isMaximumTooLong(const Album & sides)
+static bool isMaximumTooLong(const Album & album)
 {
-    const auto count{sides.size() - 1};
+    const auto count{album.size() - 1};
     if (count <= 0)
         return false;
 
     // Calculate the standard deviation of all side lengths.
-    if (sides.deviation() > 10.0)
+    if (album.deviation() > 10.0)
          return true;
 
     return false;
@@ -129,16 +129,16 @@ int splitTracksAcrossSides(void)
     size_t duration{Configuration::getDuration()};      // Get user requested maximum side length.
     const size_t boxes{Configuration::getBoxes()};      // Get user requested number of sides (boxes).
 
-    Album sides{};      // The list of sides containing a list of tracks.
+    Album album{};      // The list of sides containing a list of tracks.
     size_t optimum{};   // The number of sides required.
     size_t length{};    // The minimum side length.
 
     if (duration)
     {
-        sides = addTracksToSides(duration); // Calculate 'packed' sides -> minimum sides needed.
+        album = addTracksToSides(duration); // Calculate 'packed' sides -> minimum sides needed.
 
         // Calculate number of sides required.
-        optimum = sides.size();
+        optimum = album.size();
         if ((optimum & 1) && (Configuration::isEven()))
             optimum++;
 
@@ -177,13 +177,13 @@ int splitTracksAcrossSides(void)
         if (showDebug)
             std::cout << "\nSuggested length " << secondsToTimeString(median) << "\n";
 
-        sides.clear();
-        sides = addTracksToSides(median);
+        album.clear();
+        album = addTracksToSides(median);
 
         if (showDebug)
         {
             std::cout << "Suggested sides\n";
-            for (const auto & side : sides)
+            for (const auto & side : album)
                 std::cout << side.getTitle() << " - " << side.size() << " tracks " << secondsToTimeString(side.getValue()) << "\n";
         }
 
@@ -192,7 +192,7 @@ int splitTracksAcrossSides(void)
             break;
         }
         else
-        if (isMinimumTooShort(optimum, sides.size()))
+        if (isMinimumTooShort(optimum, album.size()))
         {
             minimum = median;
             if (showDebug)
@@ -202,7 +202,7 @@ int splitTracksAcrossSides(void)
             }
         }
         else
-        if (isMaximumTooLong(sides))
+        if (isMaximumTooLong(album))
         {
             maximum = median;
             if (showDebug)
@@ -229,7 +229,7 @@ int splitTracksAcrossSides(void)
     if (!csv)
         std::cout << "\nThe recommended sides are\n";
 
-    sides.stream(std::cout, Configuration::isPlain(), csv);
+    album.stream(std::cout, Configuration::isPlain(), csv);
 
     return 0;
 }
