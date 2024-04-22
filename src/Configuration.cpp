@@ -45,7 +45,7 @@ Item::Item(const std::string & line)
         return;
 
     std::string duration(line, 0, pos);
-    seconds = timeStringToSeconds(duration);
+    ref = timeStringToSeconds(duration);
 
     // Get track title from whatever is after duration.
     pos = line.find_first_not_of(whitespace, pos);
@@ -57,7 +57,7 @@ Item::Item(const std::string & line)
 
 bool Item::streamItem(std::ostream & os) const
 {
-    const std::string time{secondsToTimeString(seconds)};
+    const std::string time{secondsToTimeString(getValue())};
 
     os << "  " << time << " - " << title << "\n";
 
@@ -206,6 +206,11 @@ int Configuration::loadTracks(void)
         auto comp = [](const Item & a, const Item & b) { return a.getValue() > b.getValue(); };
         std::sort(items.begin(), items.end(), comp);
     }
+
+    // Add indices to items.
+    const int max(size());
+    for (int i{}; i < max; ++i)
+        items[i].setIndex(i);
 
     return 0;
 }

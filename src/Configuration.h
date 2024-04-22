@@ -43,14 +43,22 @@ class Item
 public:
     Item(const std::string & line);
 
-    const std::string & getTitle(void) const { return title; }
-    size_t getValue(void) const { return seconds; }
+    static size_t merge(size_t index, size_t value) { return index << 32 | value & 0xFFFFFFFF; }
+    static size_t sepIndex(size_t ref) { return ref >> 32; }
+    static size_t sepValue(size_t ref) { return ref & 0xFFFFFFFF; }
+
+    const std::string & getLabel(void) const { return title; }
+    size_t getIndex(void) const { return sepIndex(ref); }
+    size_t getValue(void) const { return sepValue(ref); }
+    size_t getRef(void) const { return ref; }
+
+    void setIndex(size_t index) { merge(index, ref); }
 
     bool streamItem(std::ostream & os) const;
 
 private:
     std::string title;
-    size_t seconds;
+    size_t ref;
 };
 
 
@@ -141,10 +149,10 @@ public:
     static size_t sepIndex(size_t ref) { return ref >> 32; }
     static size_t sepValue(size_t ref) { return ref & 0xFFFFFFFF; }
 
-    static const std::string & getLabel(size_t index) { return instance().items[index].getTitle(); }
+    static const std::string & getLabel(size_t index) { return instance().items[index].getLabel(); }
     static size_t getValue(size_t index) { return instance().items[index].getValue(); }
 
-    static size_t getRef(size_t index) { return merge(index, instance().getValue(index)); }
+    static size_t getRef(size_t index) { return instance().items[index].getRef(); }
     static const std::string & getLabelFromRef(size_t ref) { return instance().getLabel(sepIndex(ref)); }
     static size_t getValueFromRef(size_t ref) { return sepValue(ref); }
 
