@@ -96,26 +96,6 @@ std::string secondsToTimeString(size_t seconds, const std::string & sep)
     return ss.str();
 }
 
-/**
- * @brief Builds a vector of Tracks from the input file.
- * 
- * @param inputFile Name of input file.
- * @return std::vector<Track> input file represented as a list of Tracks
- */
-Side buildTrackListFromInputFile(const std::filesystem::path & inputFile)
-{
-    TextFile input{inputFile};
-    input.read();
-
-    Side tracks{};
-    tracks.reserve(input.size());
-
-    for (const auto & line : input)
-        tracks.emplace_back(line);
-
-    return tracks;
-}
-
 
 /**
  * @section Define Timer class.
