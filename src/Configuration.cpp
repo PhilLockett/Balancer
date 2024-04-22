@@ -175,7 +175,7 @@ int Configuration::parseCommandLine(int argc, char *argv[])
         case 's': enableShuffle(); break;
         case 'p': enablePlain(); break;
         case 'c': enableCSV(); break;
-        case 'a': setDivider(option.getArg()); break;
+        case 'a': setDelimiter(option.getArg()); break;
 
         case 'x': enableDebug(); break;
 
@@ -273,7 +273,7 @@ void Configuration::display(std::ostream &os) const
     if (isPlain())
         os << "Display lengths in seconds instead of hh:mm:ss.\n";
     if (isCSV())
-        os << "Comma separated variable output requested separated by " << getDelimiter() << ".\n";
+        os << "Comma separated value output requested separated by " << getDelimiter() << ".\n";
 }
 
 /**
