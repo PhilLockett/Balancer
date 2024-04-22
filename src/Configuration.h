@@ -52,7 +52,7 @@ public:
     size_t getValue(void) const { return sepValue(ref); }
     size_t getRef(void) const { return ref; }
 
-    void setIndex(size_t index) { merge(index, ref); }
+    void setIndex(size_t index) { ref = merge(index, ref); }
 
     bool streamItem(std::ostream & os) const;
 

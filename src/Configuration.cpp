@@ -57,9 +57,15 @@ Item::Item(const std::string & line)
 
 bool Item::streamItem(std::ostream & os) const
 {
+    const size_t index{getIndex()};
     const std::string time{secondsToTimeString(getValue())};
 
-    os << "  " << time << " - " << title << "\n";
+    if (index < 10)
+        os << " ";
+    os << "  " << index;
+    os << "  " << time;
+    os << " - " << title;
+    os << "\n";
 
     return true;
 }
@@ -211,6 +217,9 @@ int Configuration::loadTracks(void)
     const int max(size());
     for (int i{}; i < max; ++i)
         items[i].setIndex(i);
+
+    if (Configuration::isDebug())
+        streamItems(std::cout);
 
     return 0;
 }
