@@ -218,7 +218,7 @@ int Configuration::loadTracks(void)
     for (int i{}; i < max; ++i)
         items[i].setIndex(i);
 
-    if (Configuration::isDebug())
+    if (isDebug())
         streamItems(std::cout);
 
     return 0;
