@@ -70,9 +70,33 @@ private:
 
 class Configuration
 {
+//- Item list support.
+private:
+    std::vector<Item> items;
+
+public:
+    using Iterator = std::vector<Item>::const_iterator;
+
+    static size_t size(void) { return instance().items.size(); }
+    static bool isValidIndex(size_t index) { return index < instance().size(); }
+
+    static const std::string & getLabel(size_t index) { return instance().items[index].getLabel(); }
+    static size_t getValue(size_t index) { return instance().items[index].getValue(); }
+
+    static size_t getRef(size_t index) { return instance().items[index].getRef(); }
+    static const std::string & getLabelFromRef(size_t ref) { return getLabel(Item::sepIndex(ref)); }
+    static size_t getValueFromRef(size_t ref) { return Item::sepValue(ref); }
+
+    static Iterator begin(void) { return instance().items.begin(); }
+    static Iterator end(void) { return instance().items.end(); }
+
+    static bool streamItems(std::ostream & os);
+
+
+//- Command line parsing support.
 private:
 //- Hide the default constructor and destructor.
-    Configuration(void) : 
+    Configuration(void) : items{},
         name{"Balancer"}, inputFile{}, timeout{60}, seconds{}, even{},
         boxes{}, shuffle{}, plain{}, csv{}, delimiter{','}, debug{}
         {  }
@@ -134,32 +158,6 @@ public:
 
     static bool isValid(bool showErrors = false);
 
-
-//- Item list support.
-private:
-    std::vector<Item> items;
-
-public:
-    using Iterator = std::vector<Item>::const_iterator;
-
-    static size_t size(void) { return instance().items.size(); }
-    static bool isValidIndex(size_t index) { return index < instance().size(); }
-
-    static size_t merge(size_t index, size_t value) { return index << 32 | value & 0xFFFFFFFF; }
-    static size_t sepIndex(size_t ref) { return ref >> 32; }
-    static size_t sepValue(size_t ref) { return ref & 0xFFFFFFFF; }
-
-    static const std::string & getLabel(size_t index) { return instance().items[index].getLabel(); }
-    static size_t getValue(size_t index) { return instance().items[index].getValue(); }
-
-    static size_t getRef(size_t index) { return instance().items[index].getRef(); }
-    static const std::string & getLabelFromRef(size_t ref) { return instance().getLabel(sepIndex(ref)); }
-    static size_t getValueFromRef(size_t ref) { return sepValue(ref); }
-
-    static Iterator begin(void) { return instance().items.begin(); }
-    static Iterator end(void) { return instance().items.end(); }
-
-    static bool streamItems(std::ostream & os);
 
 };
 
