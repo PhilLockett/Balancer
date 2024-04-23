@@ -34,27 +34,6 @@
 
 
 /**
- * @section Define Track class.
- *
- */
-
-class Track
-{
-public:
-    Track(size_t r) : ref{r} {}
-
-    const std::string & getTitle(void) const { return Configuration::getLabelFromRef(ref); }
-    size_t getValue(void) const { return Configuration::getValueFromRef(ref); }
-
-    std::string toString(bool plain=false, bool csv=false) const;
-    bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
-
-private:
-    size_t ref;
-};
-
-
-/**
  * @section Define Side class.
  *
  */
@@ -62,23 +41,20 @@ private:
 class Side
 {
 public:
-    using CIterator = std::vector<Track>::const_iterator;
-    using Iterator = std::vector<Track>::iterator;
+    using CIterator = std::vector<size_t>::const_iterator;
+    using Iterator = std::vector<size_t>::iterator;
 
     Side(void) : title{}, seconds{} {}
 
     void setTitle(const std::string & t) { title = t; }
     void reserve(size_t len) { tracks.reserve(len); }
 
-    void push(const Track & track);
     void push(size_t ref);
     void pop(void);
 
     std::string getTitle() const { return title; }
     size_t getValue() const { return seconds; }
 
-    Track& operator[](std::size_t idx) { return tracks[idx]; }
-    const Track& operator[](std::size_t idx) const { return tracks[idx]; }
     size_t size(void) const { return tracks.size(); }
     CIterator begin(void) const { return tracks.begin(); }
     CIterator end(void) const { return tracks.end(); }
@@ -93,7 +69,10 @@ public:
 private:
     std::string title;
     size_t seconds;
-    std::vector<Track> tracks;
+    std::vector<size_t> tracks;
+
+    static std::string trackToString(size_t ref, bool plain, bool csv);
+    static bool streamTrack(std::ostream & os, size_t ref, bool plain, bool csv);
 
 };
 

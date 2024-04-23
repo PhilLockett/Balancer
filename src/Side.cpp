@@ -32,33 +32,39 @@
 
 
 /**
- * @section Define Track class.
+ * @section Define Track support.
  *
  */
 
-std::string Track::toString(bool plain, bool csv) const
+std::string Side::trackToString(size_t ref, bool plain, bool csv)
 {
-    std::string time{plain ? std::to_string(getValue()) : secondsToTimeString(getValue())};
+    const std::string & title{ Configuration::getLabelFromRef(ref) };
+    size_t value{ Configuration::getValueFromRef(ref) };
+
+    std::string time{plain ? std::to_string(value) : secondsToTimeString(value)};
 
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
-        s = "Track" + c + time + c + "\"" + getTitle() + "\"";
+        s = "Track" + c + time + c + "\"" + title + "\"";
     else
-        s = time + " - " + getTitle();
+        s = time + " - " + title;
 
     return s;
 }
 
-bool Track::stream(std::ostream & os, bool plain, bool csv) const
+bool Side::streamTrack(std::ostream & os, size_t ref, bool plain, bool csv)
 {
-    std::string time{plain ? std::to_string(getValue()) : secondsToTimeString(getValue())};
+    const std::string & title{ Configuration::getLabelFromRef(ref) };
+    size_t value{ Configuration::getValueFromRef(ref) };
+
+    std::string time{plain ? std::to_string(value) : secondsToTimeString(value)};
 
     const std::string c{Configuration::getDelimiter()};
     if (csv)
-        os << "Track" << c << time << c << "\"" << getTitle() << "\"";
+        os << "Track" << c << time << c << "\"" << title << "\"";
     else
-        os << time << " - " << getTitle();
+        os << time << " - " << title;
     os << "\n";
 
     return true;
@@ -70,21 +76,15 @@ bool Track::stream(std::ostream & os, bool plain, bool csv) const
  *
  */
 
-void Side::push(const Track & track)
-{
-    tracks.push_back(track);
-    seconds += track.getValue();
-}
-
 void Side::push(size_t ref)
 {
-    tracks.emplace_back(ref);
+    tracks.push_back(ref);
     seconds += Configuration::getValueFromRef(ref);
 }
 
 void Side::pop(void)
 {
-    seconds -= tracks.back().getValue();
+    seconds -= Configuration::getValueFromRef(tracks.back());
     tracks.pop_back();
 }
 
@@ -101,7 +101,7 @@ std::string Side::toString(bool plain, bool csv) const
     s += '\n';
 
     for (const auto & track : tracks)
-        s += track.toString(plain, csv) + "\n";
+        s += trackToString(track, plain, csv) + "\n";
 
     if (!csv)
         s += time + '\n';
@@ -121,7 +121,7 @@ bool Side::stream(std::ostream & os, bool plain, bool csv) const
     os << "\n";
 
     for (const auto & track : tracks)
-        track.stream(os, plain, csv);
+        streamTrack(os, track, plain, csv);
 
     if (!csv)
         os << time << "\n\n";
