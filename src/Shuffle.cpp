@@ -118,15 +118,15 @@ private:
 
 };
 
-void SideRef::push(size_t track)
+void SideRef::push(size_t trackIndex)
 {
-    trackRefs.push_back(track);
-    seconds += Configuration::getValue(track);
+    trackRefs.push_back(Configuration::getRef(trackIndex));
+    seconds += Configuration::getValue(trackIndex);
 }
 
 void SideRef::pop()
 {
-    seconds -= Configuration::getValue(trackRefs.back());
+    seconds -= Configuration::getValueFromRef(trackRefs.back());
     trackRefs.pop_back();
 }
 
@@ -146,7 +146,7 @@ public:
     bool addTracksToSides(void);
     bool isSuccessful(void) const { return success; }
     bool show(std::ostream & os) const;
-    std::string trackToString(size_t i, bool plain, bool csv) const;
+    std::string refToString(size_t i, bool plain, bool csv) const;
     std::string sideToString(const std::vector<size_t> &, const std::string &, bool, bool) const;
     bool showAll(std::ostream & os, bool plain=false, bool csv=false) const;
 
@@ -245,20 +245,20 @@ bool Finder::show(std::ostream & os) const
     for (const auto & side : best)
     {
         size_t total{};
-        for (const auto & track : side)
-            total += Configuration::getValue(track);
+        for (const auto & ref : side)
+            total += Configuration::getValueFromRef(ref);
         os << "Side " << std::to_string(++i) << " - " << side.size() << " tracks " << secondsToTimeString(total) << "\n";
     }
 
     return success;
 }
 
-std::string Finder::trackToString(size_t track, bool plain, bool csv) const
+std::string Finder::refToString(size_t ref, bool plain, bool csv) const
 {
-    const size_t seconds{Configuration::getValue(track)};
+    const size_t seconds{Configuration::getValueFromRef(ref)};
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
-    const std::string & title{Configuration::getLabel(track)};
+    const std::string & title{Configuration::getLabelFromRef(ref)};
     const std::string c{Configuration::getDelimiter()};
     std::string s{};
     if (csv)
@@ -272,8 +272,8 @@ std::string Finder::trackToString(size_t track, bool plain, bool csv) const
 std::string Finder::sideToString(const std::vector<size_t> & side, const std::string & title, bool plain, bool csv) const
 {
     size_t seconds{};
-    for (const auto & track : side)
-        seconds += Configuration::getValue(track);
+    for (const auto & ref : side)
+        seconds += Configuration::getValueFromRef(ref);
 
     std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
 
@@ -285,8 +285,8 @@ std::string Finder::sideToString(const std::vector<size_t> & side, const std::st
         s = title + " - " + std::to_string(side.size()) + " tracks";
     s += '\n';
 
-    for (const auto & track : side)
-        s += trackToString(track, plain, csv) + "\n";
+    for (const auto & ref : side)
+        s += refToString(ref, plain, csv) + "\n";
 
     if (!csv)
         s += time + "\n\n";
