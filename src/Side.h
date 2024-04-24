@@ -52,7 +52,7 @@ public:
     void push(size_t ref);
     void pop(void);
 
-    std::string getTitle() const { return title; }
+    const std::string & getTitle() const { return title; }
     size_t getValue() const { return seconds; }
 
     size_t size(void) const { return tracks.size(); }
@@ -98,7 +98,7 @@ public:
 
     double deviation(void) const;
 
-    std::string getTitle(void) const { return title; }
+    const std::string & getTitle() const { return title; }
     size_t getValue(void) const { return seconds; }
 
     size_t size(void) const { return sides.size(); }
