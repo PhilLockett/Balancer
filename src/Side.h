@@ -71,8 +71,8 @@ private:
     size_t seconds;
     std::vector<size_t> tracks;
 
-    static std::string trackToString(size_t ref, bool plain, bool csv);
-    static bool streamTrack(std::ostream & os, size_t ref, bool plain, bool csv);
+    static std::string trackToString(size_t ref, bool plain=false, bool csv=false);
+    static bool streamTrack(std::ostream & os, size_t ref, bool plain=false, bool csv=false);
 
 };
 
