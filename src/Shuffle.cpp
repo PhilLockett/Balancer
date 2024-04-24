@@ -93,45 +93,6 @@ T Indexer<T>::inc()
 
 
 /**
- * @section Define SideRef class.
- *
- */
-
-class SideRef
-{
-public:
-    SideRef(void) : seconds{} {}
-
-    void push(size_t);
-    void pop();
-
-    size_t getValue() const { return seconds; }
-
-    size_t size(void) const { return trackRefs.size(); }
-    void clear() { seconds = 0; trackRefs.clear(); }
-
-    std::vector<size_t> getRefs() const { return trackRefs; }
-
-private:
-    size_t seconds;
-    std::vector<size_t> trackRefs;
-
-};
-
-void SideRef::push(size_t ref)
-{
-    trackRefs.push_back(ref);
-    seconds += Configuration::getValueFromRef(ref);
-}
-
-void SideRef::pop()
-{
-    seconds -= Configuration::getValueFromRef(trackRefs.back());
-    trackRefs.pop_back();
-}
-
-
-/**
  * @section Define Finder class.
  *
  */
@@ -139,7 +100,7 @@ void SideRef::pop()
 class Finder
 {
 public:
-    using Iterator = std::vector<SideRef>::const_iterator;
+    using Iterator = std::vector<Side>::const_iterator;
 
     Finder(const size_t, const size_t, const size_t);
 
@@ -167,7 +128,7 @@ private:
     int sideIndex;
     bool success;
 
-    std::vector<SideRef> sides;
+    std::vector<Side> sides;
 
     double dev;
     std::vector<std::vector<size_t>> best;
@@ -181,7 +142,7 @@ Finder::Finder(const size_t dur, const size_t tim, const size_t count) :
 {
     sides.reserve(sideCount);
     best.reserve(sideCount);
-    SideRef side{};
+    Side side{};
     for (int i = 0; i < sideCount; ++i)
         sides.push_back(side);
 }
@@ -214,7 +175,7 @@ bool Finder::look(size_t ref)
 
             if (trackIndex+1 == trackCount)
             {
-                const auto latest{deviation<SideRef>(sides)};
+                const auto latest{deviation<Side>(sides)};
                 if (latest < dev)
                     snapshot(latest);
             }

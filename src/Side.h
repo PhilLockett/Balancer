@@ -66,6 +66,8 @@ public:
 
     void clear(void) { seconds = 0; tracks.clear(); }
 
+    std::vector<size_t> getRefs() const { return tracks; }
+
 private:
     std::string title;
     size_t seconds;
