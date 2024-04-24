@@ -118,10 +118,10 @@ private:
 
 };
 
-void SideRef::push(size_t trackIndex)
+void SideRef::push(size_t ref)
 {
-    trackRefs.push_back(Configuration::getRef(trackIndex));
-    seconds += Configuration::getValue(trackIndex);
+    trackRefs.push_back(ref);
+    seconds += Configuration::getValueFromRef(ref);
 }
 
 void SideRef::pop()
@@ -217,7 +217,7 @@ bool Finder::look(int trackIndex)
         auto & sideRef{sides[side()]};
         if (sideRef.getValue() + Configuration::getValue(trackIndex) <= duration)
         {
-            sideRef.push(trackIndex);
+            sideRef.push(Configuration::getRef(trackIndex));
             look(trackIndex+1);
             sideRef.pop();
         }
