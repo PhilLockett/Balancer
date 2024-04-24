@@ -43,7 +43,7 @@
  * on whether 'first' is odd or even. 
  */
 
-template<typename T=int>
+template<typename T=size_t>
 class Indexer
 {
 public:
@@ -155,7 +155,7 @@ public:
     Iterator end(void) { return sides.end(); }
 
 private:
-    bool look(int track);
+    bool look(size_t ref);
     bool snapshot(double latest);
 
     const size_t duration;
@@ -197,29 +197,34 @@ bool Finder::snapshot(double latest)
     return true;
 }
 
-bool Finder::look(int trackIndex)
+bool Finder::look(size_t ref)
 {
+    const size_t trackIndex(Configuration::getIndexFromRef(ref));
+
     if ((!timer.isWorking()) || (dev < 20.0))
         return true;
 
-    if (trackIndex == trackCount)
-    {
-        const auto latest{deviation<SideRef>(sides)};
-        if (latest < dev)
-            snapshot(latest);
-
-        return true;
-    }
-
-    Indexer side{trackIndex, (int)sideCount};
+    Indexer side{trackIndex, sideCount};
     for (int i = 0; i < sideCount; ++i, side.inc())
     {
         auto & sideRef{sides[side()]};
         if (sideRef.getValue() + Configuration::getValue(trackIndex) <= duration)
         {
             sideRef.push(Configuration::getRef(trackIndex));
-            look(trackIndex+1);
+
+            if (trackIndex+1 == trackCount)
+            {
+                const auto latest{deviation<SideRef>(sides)};
+                if (latest < dev)
+                    snapshot(latest);
+            }
+            else
+            {
+                look(Configuration::getRef(trackIndex+1));
+            }
+
             sideRef.pop();
+
         }
     }
 
@@ -230,7 +235,7 @@ bool Finder::addTracksToSides(void)
 {
     timer.start();
 
-    success = look(0);
+    success = look(Configuration::getRef(0));
     success = true;
 
     timer.terminate();

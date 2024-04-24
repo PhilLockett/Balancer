@@ -88,6 +88,7 @@ public:
     static size_t getRef(size_t index) { return getItem(index).getRef(); }
     static const std::string & getLabelFromRef(size_t ref) { return getLabel(Item::sepIndex(ref)); }
     static size_t getValueFromRef(size_t ref) { return Item::sepValue(ref); }
+    static size_t getIndexFromRef(size_t ref) { return Item::sepIndex(ref); }
 
     static Iterator begin(void) { return instance().items.begin(); }
     static Iterator end(void) { return instance().items.end(); }
