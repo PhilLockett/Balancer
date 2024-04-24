@@ -74,16 +74,18 @@ class Configuration
 private:
     std::vector<Item> items;
 
+    static const Item & getItem(size_t index) { return instance().items[index]; }
+
 public:
     using Iterator = std::vector<Item>::const_iterator;
 
     static size_t size(void) { return instance().items.size(); }
     static bool isValidIndex(size_t index) { return index < instance().size(); }
 
-    static const std::string & getLabel(size_t index) { return instance().items[index].getLabel(); }
-    static size_t getValue(size_t index) { return instance().items[index].getValue(); }
+    static const std::string & getLabel(size_t index) { return getItem(index).getLabel(); }
+    static size_t getValue(size_t index) { return getItem(index).getValue(); }
 
-    static size_t getRef(size_t index) { return instance().items[index].getRef(); }
+    static size_t getRef(size_t index) { return getItem(index).getRef(); }
     static const std::string & getLabelFromRef(size_t ref) { return getLabel(Item::sepIndex(ref)); }
     static size_t getValueFromRef(size_t ref) { return Item::sepValue(ref); }
 
