@@ -172,7 +172,7 @@ bool Finder::look(size_t ref)
 
             if (trackIndex+1 == trackCount)
             {
-                const auto latest{deviation<Side>(sides)};
+                const auto latest{sides.deviation()};
                 if (latest < dev)
                     snapshot(latest);
             }

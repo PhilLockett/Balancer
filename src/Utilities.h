@@ -46,32 +46,6 @@ extern const std::string digit;
 extern size_t timeStringToSeconds(std::string buffer);
 extern std::string secondsToTimeString(size_t seconds, const std::string & sep = ":");
 
-/**
- * @brief Calculate the standard deviation of the lengths of the given list of
- * sides.
- * 
- * @param list to use as data.
- * @return double the calculated the standard deviation.
- */
-template<typename T=Side, typename C=std::vector<T>>
-double deviation(const C & list)
-{
-    // Calculate total play time.
-    auto lambdaSum = [](size_t a, const T & b) { return a + b.getValue(); };
-    size_t total = std::accumulate(list.begin(), list.end(), 0, lambdaSum);
-    // std::cout << "total " << total << "\n";
-
-    double mean{(double)total / list.size()};
-    // std::cout << "mean " << mean << "\n";
-
-    auto lambdaVariance = [mean](double a, const T & b) { return a + std::pow((mean - b.getValue()), 2); };
-    double variance = std::accumulate(list.begin(), list.end(), 0.0, lambdaVariance);
-    // std::cout << "variance " << variance << "\n";
-    variance /= list.size();
-    // std::cout << "variance " << variance << "\n";
-
-    return std::sqrt(variance);
-}
 
 /**
  * @section Define Timer class.
