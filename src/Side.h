@@ -110,6 +110,8 @@ public:
 
     void clear(void) { seconds = 0; for (auto item : sides) item.clear(); sides.clear(); }
 
+    Side & operator[](size_t index) { return sides[index]; }
+
 private:
     std::string title;
     size_t seconds;

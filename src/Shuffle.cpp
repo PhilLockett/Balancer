@@ -107,13 +107,7 @@ public:
     bool addTracksToSides(void);
     bool isSuccessful(void) const { return success; }
     bool show(std::ostream & os) const;
-    std::string refToString(size_t i, bool plain, bool csv) const;
-    std::string sideToString(const std::vector<size_t> &, const std::string &, bool, bool) const;
     bool showAll(std::ostream & os, bool plain=false, bool csv=false) const;
-
-    size_t size(void) const { return sides.size(); }
-    Iterator begin(void) { return sides.begin(); }
-    Iterator end(void) { return sides.end(); }
 
 private:
     bool look(size_t ref);
@@ -128,10 +122,10 @@ private:
     int sideIndex;
     bool success;
 
-    std::vector<Side> sides;
+    Album sides;
 
     double dev;
-    std::vector<std::vector<size_t>> best;
+    Album best;
     Timer timer;
 };
 
@@ -144,7 +138,11 @@ Finder::Finder(const size_t dur, const size_t tim, const size_t count) :
     best.reserve(sideCount);
     Side side{};
     for (int i = 0; i < sideCount; ++i)
-        sides.push_back(side);
+    {
+        const std::string title{"Side " + std::to_string(i+1)};
+        side.setTitle(title);
+        sides.push(side);
+    }
 }
 
 
@@ -152,8 +150,7 @@ bool Finder::snapshot(double latest)
 {
     dev = latest;
     best.clear();
-    for (const auto & side : sides)
-        best.push_back(side.getRefs());
+    best = sides;
 
     return true;
 }
@@ -213,61 +210,16 @@ bool Finder::show(std::ostream & os) const
         size_t total{};
         for (const auto & ref : side)
             total += Configuration::getValueFromRef(ref);
-        os << "Side " << std::to_string(++i) << " - " << side.size() << " tracks " << secondsToTimeString(total) << "\n";
+        os << side.getTitle() << " - " << side.size() << " tracks " << secondsToTimeString(total) << "\n";
     }
 
     return success;
 }
 
-std::string Finder::refToString(size_t ref, bool plain, bool csv) const
-{
-    const size_t seconds{Configuration::getValueFromRef(ref)};
-    std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
-
-    const std::string & title{Configuration::getLabelFromRef(ref)};
-    const std::string c{Configuration::getDelimiter()};
-    std::string s{};
-    if (csv)
-        s = "Track" + c + time + c + "\"" + title + "\"";
-    else
-        s = time + " - " + title;
-
-    return s;
-}
-
-std::string Finder::sideToString(const std::vector<size_t> & side, const std::string & title, bool plain, bool csv) const
-{
-    size_t seconds{};
-    for (const auto & ref : side)
-        seconds += Configuration::getValueFromRef(ref);
-
-    std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
-
-    const std::string c{Configuration::getDelimiter()};
-    std::string s{};
-    if (csv)
-        s = "Side" + c + time + c + "\"" + title + ", " + std::to_string(side.size()) + " tracks\"";
-    else
-        s = title + " - " + std::to_string(side.size()) + " tracks";
-    s += '\n';
-
-    for (const auto & ref : side)
-        s += refToString(ref, plain, csv) + "\n";
-
-    if (!csv)
-        s += time + "\n\n";
-
-    return s;
-}
 
 bool Finder::showAll(std::ostream & os, bool plain, bool csv) const
 {
-    size_t index{};
-    for (const auto & side : best)
-    {
-        const std::string title{"Side " + std::to_string(++index)};
-        os << sideToString(side, title, plain, csv);
-    }
+    best.stream(os, plain, csv);
 
     return success;
 }
