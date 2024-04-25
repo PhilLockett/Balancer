@@ -204,14 +204,7 @@ bool Finder::addTracksToSides(void)
 bool Finder::show(std::ostream & os) const
 {
     os << "deviation " << dev << "\n";
-    int i = 0;
-    for (const auto & side : best)
-    {
-        size_t total{};
-        for (const auto & ref : side)
-            total += Configuration::getValueFromRef(ref);
-        os << side.getTitle() << " - " << side.size() << " tracks " << secondsToTimeString(total) << "\n";
-    }
+    best.summary(os);
 
     return success;
 }

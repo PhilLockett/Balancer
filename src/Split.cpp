@@ -183,8 +183,7 @@ int splitTracksAcrossSides(void)
         if (showDebug)
         {
             std::cout << "Suggested sides\n";
-            for (const auto & side : album)
-                std::cout << side.getTitle() << " - " << side.size() << " tracks " << secondsToTimeString(side.getValue()) << "\n";
+            album.summary(std::cout);
         }
 
         if ((median == minimum) || (median == maximum))

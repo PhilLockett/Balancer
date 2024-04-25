@@ -62,6 +62,7 @@ public:
     Iterator end(void) { return tracks.end(); }
 
     bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
+    bool summary(std::ostream & os, bool plain=false) const;
 
     void clear(void) { seconds = 0; tracks.clear(); }
 
@@ -105,6 +106,7 @@ public:
     Iterator end(void) const { return sides.end(); }
 
     bool stream(std::ostream & os, bool plain=false, bool csv=false) const;
+    bool summary(std::ostream & os, bool plain=false) const;
 
     void clear(void) { seconds = 0; for (auto item : sides) item.clear(); sides.clear(); }
 

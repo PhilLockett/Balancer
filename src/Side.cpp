@@ -91,6 +91,14 @@ bool Side::stream(std::ostream & os, bool plain, bool csv) const
     return true;
 }
 
+bool Side::summary(std::ostream & os, bool plain) const
+{
+    const std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
+    os << getTitle() << " - " << size() << " tracks " << time << "\n";
+
+    return true;
+}
+
 
 /**
  * @section Define Album class.
@@ -138,6 +146,14 @@ bool Album::stream(std::ostream & os, bool plain, bool csv) const
 {
     for (const auto & side : sides)
         side.stream(std::cout, plain, csv);
+
+    return true;
+}
+
+bool Album::summary(std::ostream & os, bool plain) const
+{
+    for (const auto & side : sides)
+        side.summary(std::cout, plain);
 
     return true;
 }
