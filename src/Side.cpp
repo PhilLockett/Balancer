@@ -36,23 +36,6 @@
  *
  */
 
-std::string Side::trackToString(size_t ref, bool plain, bool csv)
-{
-    const std::string & title{ Configuration::getLabelFromRef(ref) };
-    size_t value{ Configuration::getValueFromRef(ref) };
-
-    std::string time{plain ? std::to_string(value) : secondsToTimeString(value)};
-
-    const std::string c{Configuration::getDelimiter()};
-    std::string s{};
-    if (csv)
-        s = "Track" + c + time + c + "\"" + title + "\"";
-    else
-        s = time + " - " + title;
-
-    return s;
-}
-
 bool Side::streamTrack(std::ostream & os, size_t ref, bool plain, bool csv)
 {
     const std::string & title{ Configuration::getLabelFromRef(ref) };
@@ -86,27 +69,6 @@ void Side::pop(void)
 {
     seconds -= Configuration::getValueFromRef(tracks.back());
     tracks.pop_back();
-}
-
-std::string Side::toString(bool plain, bool csv) const
-{
-    std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
-
-    const std::string c{Configuration::getDelimiter()};
-    std::string s{};
-    if (csv)
-        s = "Side" + c + time + c + "\"" + title + ", " + std::to_string(size()) + " tracks\"";
-    else
-        s = title + " - " + std::to_string(size()) + " tracks";
-    s += '\n';
-
-    for (const auto & track : tracks)
-        s += trackToString(track, plain, csv) + "\n";
-
-    if (!csv)
-        s += time + '\n';
-
-    return s;
 }
 
 bool Side::stream(std::ostream & os, bool plain, bool csv) const
@@ -170,15 +132,6 @@ double Album::deviation(void) const
     // std::cout << "variance " << variance << "\n";
 
     return std::sqrt(variance);
-}
-
-std::string Album::toString(bool plain, bool csv) const
-{
-    std::string s{};
-    for (const auto & side : sides)
-        s += side.toString(plain, csv) + "\n";
-
-    return s;
 }
 
 bool Album::stream(std::ostream & os, bool plain, bool csv) const
