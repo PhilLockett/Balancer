@@ -117,9 +117,6 @@ private:
     const size_t sideCount;
     const size_t lastTrack;
 
-    bool forward;
-    int trackIndex;
-    int sideIndex;
     bool success;
 
     Album sides;
@@ -131,7 +128,7 @@ private:
 
 Finder::Finder(const size_t dur, const size_t tim, const size_t count) :
     duration{dur}, sideCount{count}, lastTrack{Configuration::size() - 1},
-    forward{true}, trackIndex{}, sideIndex{}, success{}, sides{},
+    success{}, sides{},
     dev{std::numeric_limits<double>::max()}, best{}, timer{tim}
 {
     sides.reserve(sideCount);
