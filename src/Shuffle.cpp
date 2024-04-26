@@ -115,7 +115,7 @@ private:
 
     const size_t duration;
     const size_t sideCount;
-    const size_t trackCount;
+    const size_t lastTrack;
 
     bool forward;
     int trackIndex;
@@ -130,7 +130,7 @@ private:
 };
 
 Finder::Finder(const size_t dur, const size_t tim, const size_t count) :
-    duration{dur}, sideCount{count}, trackCount{Configuration::size()},
+    duration{dur}, sideCount{count}, lastTrack{Configuration::size() - 1},
     forward{true}, trackIndex{}, sideIndex{}, success{}, sides{},
     dev{std::numeric_limits<double>::max()}, best{}, timer{tim}
 {
@@ -163,14 +163,14 @@ bool Finder::look(size_t ref)
         return true;
 
     Indexer sideIndex{trackIndex, sideCount};
-    for (int i = 0; i < sideCount; ++i, sideIndex.inc())
+    for (int i{}; i < sideCount; ++i, sideIndex.inc())
     {
         auto & sideRef{sides[sideIndex()]};
         if (sideRef.getValue() + Configuration::getValue(trackIndex) <= duration)
         {
             sideRef.push(Configuration::getRef(trackIndex));
 
-            if (trackIndex+1 == trackCount)
+            if (trackIndex == lastTrack)
             {
                 const auto latest{sides.deviation()};
                 if (latest < dev)
