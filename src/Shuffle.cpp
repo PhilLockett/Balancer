@@ -162,10 +162,10 @@ bool Finder::look(size_t ref)
     if ((!timer.isWorking()) || (dev < 20.0))
         return true;
 
-    Indexer side{trackIndex, sideCount};
-    for (int i = 0; i < sideCount; ++i, side.inc())
+    Indexer sideIndex{trackIndex, sideCount};
+    for (int i = 0; i < sideCount; ++i, sideIndex.inc())
     {
-        auto & sideRef{sides[side()]};
+        auto & sideRef{sides[sideIndex()]};
         if (sideRef.getValue() + Configuration::getValue(trackIndex) <= duration)
         {
             sideRef.push(Configuration::getRef(trackIndex));
