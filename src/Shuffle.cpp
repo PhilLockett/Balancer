@@ -166,9 +166,9 @@ bool Finder::look(size_t ref)
     for (int i{}; i < sideCount; ++i, sideIndex.inc())
     {
         auto & sideRef{sides[sideIndex()]};
-        if (sideRef.getValue() + Configuration::getValue(trackIndex) <= duration)
+        if (sideRef.getValue() + Configuration::getValueFromRef(ref) <= duration)
         {
-            sideRef.push(Configuration::getRef(trackIndex));
+            sideRef.push(ref);
 
             if (trackIndex == lastTrack)
             {
