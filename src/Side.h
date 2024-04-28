@@ -49,8 +49,8 @@ public:
     void setTitle(const std::string & t) { title = t; }
     void reserve(size_t len) { tracks.reserve(len); }
 
-    void push(size_t ref);
-    void pop(void);
+    size_t push(size_t ref);
+    void pop(size_t inc);
 
     const std::string & getTitle() const { return title; }
     size_t getValue() const { return seconds; }
@@ -99,6 +99,8 @@ public:
 
     const std::string & getTitle() const { return title; }
     size_t getValue(void) const { return seconds; }
+    void inc(size_t inc)  { seconds += inc; }
+    void dec(size_t inc)  { seconds -= inc; }
 
     size_t size(void) const { return sides.size(); }
     Iterator begin(void) const { return sides.begin(); }

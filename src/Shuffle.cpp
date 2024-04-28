@@ -165,7 +165,8 @@ bool Finder::look(size_t ref)
         auto & sideRef{sides[sideIndex()]};
         if (sideRef.getValue() + Configuration::getValueFromRef(ref) <= duration)
         {
-            sideRef.push(ref);
+            const size_t inc{sideRef.push(ref)};
+            sides.inc(inc);
 
             if (trackIndex == lastTrack)
             {
@@ -178,8 +179,8 @@ bool Finder::look(size_t ref)
                 look(Configuration::getRef(trackIndex+1));
             }
 
-            sideRef.pop();
-
+            sideRef.pop(inc);
+            sides.dec(inc);
         }
     }
 

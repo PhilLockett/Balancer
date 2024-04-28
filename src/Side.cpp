@@ -59,15 +59,18 @@ bool Side::streamTrack(std::ostream & os, size_t ref, bool plain, bool csv)
  *
  */
 
-void Side::push(size_t ref)
+size_t Side::push(size_t ref)
 {
     tracks.push_back(ref);
-    seconds += Configuration::getValueFromRef(ref);
+    const size_t inc{Configuration::getValueFromRef(ref)};
+    seconds += inc;
+
+    return inc;
 }
 
-void Side::pop(void)
+void Side::pop(size_t inc)
 {
-    seconds -= Configuration::getValueFromRef(tracks.back());
+    seconds -= inc;
     tracks.pop_back();
 }
 
@@ -111,7 +114,7 @@ void Album::push(const Side & side)
     seconds += side.getValue();
 }
 
-void Album::pop()
+void Album::pop(void)
 {
     seconds -= sides.back().getValue();
     sides.pop_back();
@@ -125,12 +128,7 @@ void Album::pop()
  */
 double Album::deviation(void) const
 {
-    // Calculate total play time.
-    auto lambdaSum = [](size_t a, const Side & b) { return a + b.getValue(); };
-    size_t total = std::accumulate(sides.begin(), sides.end(), 0, lambdaSum);
-    // std::cout << "total " << total << "\n";
-
-    double mean{(double)total / sides.size()};
+    double mean{(double)seconds / sides.size()};
     // std::cout << "mean " << mean << "\n";
 
     auto lambdaVariance = [mean](double a, const Side & b) { return a + std::pow((mean - b.getValue()), 2); };
