@@ -125,7 +125,12 @@ void Album::pop()
  */
 double Album::deviation(void) const
 {
-    double mean{(double)seconds / sides.size()};
+    // Calculate total play time.
+    auto lambdaSum = [](size_t a, const Side & b) { return a + b.getValue(); };
+    size_t total = std::accumulate(sides.begin(), sides.end(), 0, lambdaSum);
+    // std::cout << "total " << total << "\n";
+
+    double mean{(double)total / sides.size()};
     // std::cout << "mean " << mean << "\n";
 
     auto lambdaVariance = [mean](double a, const Side & b) { return a + std::pow((mean - b.getValue()), 2); };
