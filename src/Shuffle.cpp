@@ -162,11 +162,9 @@ bool Finder::look(size_t ref)
     Indexer sideIndex{trackIndex, sideCount};
     for (int i{}; i < sideCount; ++i, sideIndex.inc())
     {
-        auto & sideRef{sides[sideIndex()]};
-        if (sideRef.getValue() + Configuration::getValueFromRef(ref) <= duration)
+        if (sides.getValue(sideIndex()) + Configuration::getValueFromRef(ref) <= duration)
         {
-            const size_t inc{sideRef.push(ref)};
-            sides.inc(inc);
+            sides.push(sideIndex(), ref);
 
             if (trackIndex == lastTrack)
             {
@@ -179,8 +177,7 @@ bool Finder::look(size_t ref)
                 look(Configuration::getRef(trackIndex+1));
             }
 
-            sideRef.pop(inc);
-            sides.dec(inc);
+            sides.pop(sideIndex());
         }
     }
 

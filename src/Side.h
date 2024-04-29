@@ -49,11 +49,12 @@ public:
     void setTitle(const std::string & t) { title = t; }
     void reserve(size_t len) { tracks.reserve(len); }
 
-    size_t push(size_t ref);
-    void pop(size_t inc);
+    void push(size_t ref);
+    void pop(void);
 
-    const std::string & getTitle() const { return title; }
-    size_t getValue() const { return seconds; }
+    const std::string & getTitle(void) const { return title; }
+    size_t getValue(void) const { return seconds; }
+    size_t getLastValue(void) const { return Configuration::getValueFromRef(tracks.back()); }
 
     size_t size(void) const { return tracks.size(); }
     CIterator begin(void) const { return tracks.begin(); }
@@ -65,8 +66,6 @@ public:
     bool summary(std::ostream & os, bool plain=false) const;
 
     void clear(void) { seconds = 0; tracks.clear(); }
-
-    std::vector<size_t> getRefs() const { return tracks; }
 
 private:
     std::string title;
@@ -97,10 +96,8 @@ public:
 
     double deviation(void) const;
 
-    const std::string & getTitle() const { return title; }
+    const std::string & getTitle(void) const { return title; }
     size_t getValue(void) const { return seconds; }
-    void inc(size_t inc)  { seconds += inc; }
-    void dec(size_t inc)  { seconds -= inc; }
 
     size_t size(void) const { return sides.size(); }
     Iterator begin(void) const { return sides.begin(); }
@@ -111,7 +108,12 @@ public:
 
     void clear(void) { seconds = 0; for (auto item : sides) item.clear(); sides.clear(); }
 
-    Side & operator[](size_t index) { return sides[index]; }
+
+//- Limited access to sides/tracks.
+    size_t getValue(size_t index) const { return sides[index].getValue(); }
+    void push(size_t index, size_t ref);
+    void pop(size_t index);
+
 
 private:
     std::string title;

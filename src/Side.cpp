@@ -59,18 +59,15 @@ bool Side::streamTrack(std::ostream & os, size_t ref, bool plain, bool csv)
  *
  */
 
-size_t Side::push(size_t ref)
+void Side::push(size_t ref)
 {
     tracks.push_back(ref);
-    const size_t inc{Configuration::getValueFromRef(ref)};
-    seconds += inc;
-
-    return inc;
+    seconds += Configuration::getValueFromRef(ref);
 }
 
-void Side::pop(size_t inc)
+void Side::pop(void)
 {
-    seconds -= inc;
+    seconds -= Configuration::getValueFromRef(tracks.back());
     tracks.pop_back();
 }
 
@@ -118,6 +115,29 @@ void Album::pop(void)
 {
     seconds -= sides.back().getValue();
     sides.pop_back();
+}
+
+/**
+ * @brief Push track to the indexed side and keep the album in sync.
+ * 
+ * @param index of required side.
+ * @param ref of the required track.
+ */
+void Album::push(size_t index, size_t ref)
+{
+    sides[index].push(ref);
+    seconds += Configuration::getValueFromRef(ref);
+}
+
+/**
+ * @brief Pop track off the indexed side and keep the album in sync.
+ * 
+ * @param index of required side.
+ */
+void Album::pop(size_t index)
+{
+    seconds -= sides[index].getLastValue();
+    sides[index].pop();
 }
 
 
