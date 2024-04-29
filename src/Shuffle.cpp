@@ -247,7 +247,9 @@ int shuffleTracksAcrossSides(void)
         optimum = boxes;
         length = total / optimum;       // Calculate minimum side length.
 
-        duration = length + (*Configuration::begin()).getValue();
+        const size_t candidate1{(*Configuration::begin()).getValue()};
+        const size_t candidate2{(total * 11) / (optimum * 10)};
+        duration = std::max(candidate1, candidate2);
     }
 
     if (showDebug)
