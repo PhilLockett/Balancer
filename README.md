@@ -24,24 +24,25 @@ To clone and compile this code, execute the following unix/linux commands:
 ## Usage
 With `Balancer` compiled the following command will display the help page:
 
-    $ ./Balancer -h
-    Usage: ./Balancer [Options]
+    $ Balancer -h
+    Usage: Balancer [Options]
 
-    Splits a list of tracks across multiple sides of a given length.
+      Splits a list of tracks across multiple sides of a given length.
 
-    Options:
-            -h --help               This help page and nothing else.
-            -v --version            Display version.
+      Options:
+        -h --help               This help page and nothing else.
+        -v --version            Display version.
 
-            -i --input <file>       Input file name containing the track listing.
-            -t --timeout <seconds>  The maximum time to spend looking.
-            -d --duration <seconds> Maximum length of each side.
-            -e --even               Require an even number of sides.
-            -b --boxes <count>      Maximum number of containers (sides).
-            -s --shuffle            Re-order tracks for optimal fit.
-            -p --plain              Display lengths in seconds instead of hh:mm:ss.
-            -c --csv                Generate output as comma separated variables.
-            -a --divider <char>     Character used to separate csv fields.
+        -i --input <file>       Input file name containing the track listing.
+        -t --timeout <seconds>  The maximum time to spend looking.
+        -d --duration <seconds> Maximum length of each side.
+        -e --even               Require an even number of sides.
+        -b --boxes <count>      Maximum number of containers (sides).
+        -s --shuffle            Re-order tracks for optimal fit.
+        -o --optimal            Re-order tracks for optimal fit (slow).
+        -p --plain              Display lengths in seconds instead of hh:mm:ss.
+        -c --csv                Generate output as comma separated variables.
+        -a --delimiter <char>   Character used to separate csv fields.
 
 ### Track list file (mandatory)
 The text file containing the track list is specified using `-i` or `--input`.
