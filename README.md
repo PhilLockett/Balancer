@@ -14,12 +14,16 @@ to display the values as integers.
 
 To use `Balancer` you will need a C++ compiler and `make` utility installed. 
 
-## Cloning and compiling
-To clone and compile this code, execute the following unix/linux commands:
+## Cloning and Installing
+To clone and install this code, execute the following unix/linux commands:
 
-    git clone https://github.com/PhilLockett/Balancer.git
-    cd Balancer/
-    make
+    $ git clone https://github.com/PhilLockett/Balancer.git
+    $ cd Balancer/
+    $ chmod +x fix.sh
+    $ ./fix.sh
+    $ ./configure
+    $ make
+    $ sudo make install
 
 ## Usage
 With `Balancer` compiled the following command will display the help page:
@@ -119,13 +123,24 @@ that an be used.
     1:18	Sgt. Pepper's Lonely Hearts Club Band (Reprise)
     5:38	A Day in the Life
 
+## Uninstalling and cleaning up
+To uninstall `Balancer`, 'cd' to the same directory used to run the commands
+'./configure', 'make' and 'make install', and run the following command:
+
+    $ sudo make uninstall
+
+Once uninstalled, delete the `Balancer` directory and all it's contents (it can easily
+be cloned again if needed).
+
 ## Points of interest
 This code has the following points of interest:
 
+  * Implemented as an automake project.
   * Uses 'Opts' to help handle command line parameters.
   * The command line parameters are stored in the Configuration class.
   * The Configuration class is implemented as a singleton.
   * The Configuration setters are private so only methods can use them.
-  * The Timer class provides a timeout mechanism that can be cancelled.
+  * Textfile.h is used to read the track list file.
+  * The Timer class provides a crude timeout mechanism that can be cancelled.
   * Standard deviation is used to compare side lengths.
   * The standard deviation parameterises both the item type and container type.
