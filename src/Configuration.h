@@ -44,17 +44,21 @@ public:
     Item(const std::string & line);
 
     static size_t merge(size_t index, size_t value) { return index << 32 | value & 0xFFFFFFFF; }
-    static size_t sepIndex(size_t ref) { return ref >> 32; }
+    static size_t sepIndex(size_t ref) { return (ref >> 32) & 0x0FFFFFFF; }
     static size_t sepValue(size_t ref) { return ref & 0xFFFFFFFF; }
 
     const std::string & getLabel(void) const { return title; }
     size_t getIndex(void) const { return sepIndex(ref); }
     size_t getValue(void) const { return sepValue(ref); }
-    size_t getRef(void) const { return ref; }
+    size_t getRef(void) const { return ref & 0xEFFFFFFF'FFFFFFFF; }
 
-    void setIndex(size_t index) { ref = merge(index, ref); }
+    void setIndex(size_t index) { ref = merge(index, getRef()); }
 
     bool streamItem(std::ostream & os) const;
+
+    void setInUse(void) { ref |= 0x10000000'00000000; }
+    void clearInUse(void) { ref &= 0xEFFFFFFF'FFFFFFFF; }
+    bool isInUse(void) const { return ref & 0x10000000'00000000; }
 
 private:
     std::string title;
@@ -76,7 +80,7 @@ private:
     size_t total;
     double dev;
 
-    static const Item & getItem(size_t index) { return instance().items[index]; }
+    static Item & getItem(size_t index) { return instance().items[index]; }
 
 public:
     using Iterator = std::vector<Item>::const_iterator;
@@ -95,10 +99,15 @@ public:
     static size_t getValueFromRef(size_t ref) { return Item::sepValue(ref); }
     static size_t getIndexFromRef(size_t ref) { return Item::sepIndex(ref); }
 
+    static void setInUse(size_t index) { getItem(index).setInUse(); }
+    static void clearInUse(size_t index) { getItem(index).clearInUse(); }
+    static bool isInUse(size_t index) { return getItem(index).isInUse(); }
+
     static Iterator begin(void) { return instance().items.begin(); }
     static Iterator end(void) { return instance().items.end(); }
 
     static bool streamItems(std::ostream & os);
+    static bool streamItem(std::ostream & os, size_t index) { return getItem(index).streamItem(os); }
 
 
 //- Command line parsing support.
@@ -106,7 +115,7 @@ private:
 //- Hide the default constructor and destructor.
     Configuration(void) : items{},
         name{"Balancer"}, inputFile{}, timeout{60}, seconds{}, even{},
-        boxes{}, shuffle{}, plain{}, csv{}, delimiter{','}, debug{}
+        boxes{}, shuffle{}, force{}, plain{}, csv{}, delimiter{','}, debug{}
         {  }
     virtual ~Configuration(void) {}
 
@@ -119,6 +128,7 @@ private:
     bool even;
     size_t boxes;
     bool shuffle;
+    bool force;
     bool plain;
     bool csv;
     char delimiter;
@@ -131,6 +141,7 @@ private:
     void enableEven() { even = true; }
     void setBoxes(std::string count) { boxes = std::stoi(count); }
     void enableShuffle() { shuffle = true; }
+    void enableForce() { force = true; }
     void enablePlain() { plain = true; }
     void enableCSV() { csv = true; }
     void setDelimiter(std::string div) { delimiter = div[0]; }
@@ -159,6 +170,7 @@ public:
     static bool isEven(void) { return instance().even; }
     static size_t getBoxes(void) { return instance().boxes; }
     static bool isShuffle(void) { return instance().shuffle; }
+    static bool isForce(void) { return instance().force; }
     static bool isPlain(void) { return instance().plain; }
     static bool isCSV(void) { return instance().csv; }
     static char getDelimiter(void) { return instance().delimiter; }

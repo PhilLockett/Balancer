@@ -45,6 +45,7 @@
  *
  */
 extern int shuffleTracksAcrossSides(void);
+extern int bruteForceTrackArranging(void);
 extern int splitTracksAcrossSides(void);
 
 /**
@@ -74,6 +75,10 @@ int main(int argc, char *argv[])
     if (Configuration::isShuffle())
     {
         return shuffleTracksAcrossSides();
+    }
+    if (Configuration::isForce())
+    {
+        return bruteForceTrackArranging();
     }
 
     return splitTracksAcrossSides();

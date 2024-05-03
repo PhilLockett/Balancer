@@ -110,6 +110,7 @@ const Opts::OptsType optList
     { 'e', "even",      NULL,       "Require an even number of sides." },
     { 'b', "boxes",     "count",    "Maximum number of containers (sides)." },
     { 's', "shuffle",   NULL,       "Re-order tracks for optimal fit." },
+    { 'f', "force",     NULL,       "Re-order tracks using brute force method (slow)." },
     { 'p', "plain",     NULL,       "Display lengths in seconds instead of hh:mm:ss." },
     { 'c', "csv",       NULL,       "Generate output as comma separated variables." },
     { 'a', "delimiter", "char",     "Character used to separate csv fields." },
@@ -179,6 +180,7 @@ int Configuration::parseCommandLine(int argc, char *argv[])
         case 'e': enableEven(); break;
         case 'b': setBoxes(option.getArg()); break;
         case 's': enableShuffle(); break;
+        case 'f': enableForce(); break;
         case 'p': enablePlain(); break;
         case 'c': enableCSV(); break;
         case 'a': setDelimiter(option.getArg()); break;
@@ -300,6 +302,8 @@ void Configuration::display(std::ostream &os) const
     os << "Boxes: " << getBoxes() << "\n";
     if (isShuffle())
         os << "Optimal reordering of tracks requested.\n";
+    if (isForce())
+        os << "Brute force method of reordering tracks requested.\n";
     if (isPlain())
         os << "Display lengths in seconds instead of hh:mm:ss.\n";
     if (isCSV())

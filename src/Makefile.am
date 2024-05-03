@@ -6,6 +6,7 @@ Balancer_SOURCES = \
 	Utilities.cpp Utilities.h \
 	Side.cpp Side.h \
 	Shuffle.cpp \
+	Force.cpp \
 	Split.cpp \
 	TextFile.h
 

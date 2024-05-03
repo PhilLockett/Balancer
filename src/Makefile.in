@@ -101,7 +101,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_Balancer_OBJECTS = Balancer.$(OBJEXT) configuration.$(OBJEXT) \
 	Opts.$(OBJEXT) Utilities.$(OBJEXT) Side.$(OBJEXT) \
-	Shuffle.$(OBJEXT) Split.$(OBJEXT)
+	Shuffle.$(OBJEXT) Force.$(OBJEXT) Split.$(OBJEXT)
 Balancer_OBJECTS = $(am_Balancer_OBJECTS)
 Balancer_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -119,8 +119,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/Balancer.Po ./$(DEPDIR)/Opts.Po \
-	./$(DEPDIR)/Shuffle.Po ./$(DEPDIR)/Side.Po \
+am__depfiles_remade = ./$(DEPDIR)/Balancer.Po ./$(DEPDIR)/Force.Po \
+	./$(DEPDIR)/Opts.Po ./$(DEPDIR)/Shuffle.Po ./$(DEPDIR)/Side.Po \
 	./$(DEPDIR)/Split.Po ./$(DEPDIR)/Utilities.Po \
 	./$(DEPDIR)/configuration.Po
 am__mv = mv -f
@@ -272,6 +272,7 @@ Balancer_SOURCES = \
 	Utilities.cpp Utilities.h \
 	Side.cpp Side.h \
 	Shuffle.cpp \
+	Force.cpp \
 	Split.cpp \
 	TextFile.h
 
@@ -378,6 +379,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Balancer.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Force.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Opts.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Shuffle.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Side.Po@am__quote@ # am--include-marker
@@ -532,6 +534,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/Balancer.Po
+	-rm -f ./$(DEPDIR)/Force.Po
 	-rm -f ./$(DEPDIR)/Opts.Po
 	-rm -f ./$(DEPDIR)/Shuffle.Po
 	-rm -f ./$(DEPDIR)/Side.Po
@@ -584,6 +587,7 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/Balancer.Po
+	-rm -f ./$(DEPDIR)/Force.Po
 	-rm -f ./$(DEPDIR)/Opts.Po
 	-rm -f ./$(DEPDIR)/Shuffle.Po
 	-rm -f ./$(DEPDIR)/Side.Po

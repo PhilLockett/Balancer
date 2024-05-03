@@ -1,5 +1,5 @@
 /**
- * @file    Shuffle.cpp
+ * @file    Force.cpp
  * @author  Phil Lockett <phillockett65@gmail.com>
  * @version 1.0
  *
@@ -34,75 +34,19 @@
 #include "Configuration.h"
 
 
-/**
- * @section Define Indexer class.
- *
- * Indexer provides a cycling index from 0 to 'limit' inclusive, starting from
- * 'first'.  The intention is to provide an even spread when inserting into a
- * 2 dimensional container. The index either increases or decreases depending
- * on whether 'first' is odd or even. 
- */
-
-template<typename T=size_t>
-class Indexer
-{
-public:
-    Indexer(T first, T limit);
-    T operator()(void) const { return index; }
-    T inc();
-
-private:
-    T step, index, start, end;
-};
-
-/**
- * @brief Construct a new Indexer< T>:: Indexer object.
- * 
- * @tparam T numeric type to use for index (int by default)
- * @param first index to use.
- * @param limit maximum index.
- */
-template<typename T>
-Indexer<T>::Indexer(T first, T limit) :
-    step{1}, index{(first / 2) % limit}, start{0}, end{limit-1}
-{
-    if (first & 1)
-    {
-        step = -1;
-        index = limit - 1 - index;
-        std::swap(start, end);
-    }
-}
-
-/**
- * @brief Increment the index.
- * 
- * @tparam T numeric type to use for index (int by default)
- * @return T the new index.
- */
-template<typename T>
-T Indexer<T>::inc()
-{
-    if (index == end)
-        index = start;
-    else
-        index += step;
-
-    return index;
-}
 
 
 /**
- * @section Define Finder class.
+ * @section Define Find class.
  *
  */
 
-class Finder
+class Find
 {
 public:
     using Iterator = std::vector<Side>::const_iterator;
 
-    Finder(const size_t, const size_t, const size_t);
+    Find(const size_t, const size_t, const size_t);
 
     bool addTracksToSides(void);
     bool isSuccessful(void) const { return success; }
@@ -110,13 +54,16 @@ public:
     bool showAll(std::ostream & os, bool plain=false, bool csv=false) const;
 
 private:
-    bool look(size_t ref);
+    bool look(const int sideIndex = 0, const int trackIndex = 0);
     bool snapshot(double latest);
+    void proceed(int sideIndex, int trackIndex);
+    void reject(int sideIndex, int trackIndex);
 
     const size_t duration;
     const size_t sideCount;
-    const size_t lastTrack;
+    const size_t trackCount;
 
+    size_t usedCount;
     bool success;
 
     Album sides;
@@ -126,9 +73,9 @@ private:
     Timer timer;
 };
 
-Finder::Finder(const size_t dur, const size_t tim, const size_t count) :
-    duration{dur}, sideCount{count}, lastTrack{Configuration::size() - 1},
-    success{}, sides{},
+Find::Find(const size_t dur, const size_t tim, const size_t count) :
+    duration{dur}, sideCount{count}, trackCount{Configuration::size()},
+    usedCount{}, success{}, sides{},
     dev{std::numeric_limits<double>::max()}, best{}, timer{tim}
 {
     sides.reserve(sideCount);
@@ -142,8 +89,22 @@ Finder::Finder(const size_t dur, const size_t tim, const size_t count) :
     }
 }
 
+void Find::proceed(int sideIndex, int trackIndex)
+{
+    ++usedCount;
+    sides.push(sideIndex, Configuration::getRef(trackIndex));
+    Configuration::setInUse(trackIndex);
+}
 
-bool Finder::snapshot(double latest)
+void Find::reject(int sideIndex, int trackIndex)
+{
+    --usedCount;
+    Configuration::clearInUse(trackIndex);
+    sides.pop(sideIndex);
+}
+
+
+bool Find::snapshot(double latest)
 {
     dev = latest;
     best.clear();
@@ -152,21 +113,25 @@ bool Finder::snapshot(double latest)
     return true;
 }
 
-bool Finder::look(size_t ref)
+bool Find::look(const int sideIndex, const int trackIndex)
 {
-    const size_t trackIndex(Configuration::getIndexFromRef(ref));
+    // const size_t trackIndex(Configuration::getIndexFromRef(ref));
+    // std::cout << "look(" << sideIndex << ", " << trackIndex << ")\n";
 
-    if ((!timer.isWorking()) || (dev < 20.0))
+    if ((!timer.isWorking()) || (sideIndex == sideCount))// || (dev < 20.0))
         return true;
 
-    Indexer sideIndex{trackIndex, sideCount};
-    for (int i{}; i < sideCount; ++i, sideIndex.inc())
-    {
-        if (sides.getValue(sideIndex()) + Configuration::getValueFromRef(ref) <= duration)
-        {
-            sides.push(sideIndex(), ref);
 
-            if (trackIndex == lastTrack)
+    for (int index{trackIndex}; index < trackCount; ++index)
+    {
+        if (Configuration::isInUse(index))
+            continue;
+
+        if (sides.getValue(sideIndex) + Configuration::getValue(index) <= duration)
+        {
+            proceed(sideIndex, index);
+
+            if (usedCount == trackCount)
             {
                 const auto latest{sides.deviation()};
                 if (latest < dev)
@@ -174,21 +139,26 @@ bool Finder::look(size_t ref)
             }
             else
             {
-                look(Configuration::getRef(trackIndex+1));
+                look(sideIndex, index+1);
             }
 
-            sides.pop(sideIndex());
+            reject(sideIndex, index);
+        }
+        else
+        {
+            // sides.stream(std::cout);
+            look(sideIndex+1);
         }
     }
 
     return false;
 }
 
-bool Finder::addTracksToSides(void)
+bool Find::addTracksToSides(void)
 {
     timer.start();
 
-    success = look(Configuration::getRef(0));
+    success = look();
     success = true;
 
     timer.terminate();
@@ -196,7 +166,7 @@ bool Finder::addTracksToSides(void)
     return success;
 }
 
-bool Finder::show(std::ostream & os) const
+bool Find::show(std::ostream & os) const
 {
     os << "deviation " << dev << "\n";
     best.summary(os);
@@ -205,7 +175,7 @@ bool Finder::show(std::ostream & os) const
 }
 
 
-bool Finder::showAll(std::ostream & os, bool plain, bool csv) const
+bool Find::showAll(std::ostream & os, bool plain, bool csv) const
 {
     best.stream(os, plain, csv);
 
@@ -213,7 +183,7 @@ bool Finder::showAll(std::ostream & os, bool plain, bool csv) const
 }
 
 
-int shuffleTracksAcrossSides(void)
+int bruteForceTrackArranging(void)
 {
     const auto showDebug{Configuration::isDebug()};
 
@@ -241,9 +211,7 @@ int shuffleTracksAcrossSides(void)
         optimum = boxes;
         length = total / optimum;       // Calculate minimum side length.
 
-        const size_t candidate1{(*Configuration::begin()).getValue()};
-        const size_t candidate2{(total * 11) / (optimum * 10)};
-        duration = std::max(candidate1, candidate2);
+        duration = length + (*Configuration::begin()).getValue();
     }
 
     if (showDebug)
@@ -255,7 +223,7 @@ int shuffleTracksAcrossSides(void)
         std::cout << "Minimum side length " << secondsToTimeString(length) << "\n";
     }
 
-    Finder find{duration, timeout, optimum};
+    Find find{duration, timeout, optimum};
     find.addTracksToSides();
     if (find.isSuccessful())
     {

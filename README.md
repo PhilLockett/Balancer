@@ -43,7 +43,7 @@ With `Balancer` compiled the following command will display the help page:
         -e --even               Require an even number of sides.
         -b --boxes <count>      Maximum number of containers (sides).
         -s --shuffle            Re-order tracks for optimal fit.
-        -o --optimal            Re-order tracks for optimal fit (slow).
+        -f --force              Re-order tracks using brute force method (slow).
         -p --plain              Display lengths in seconds instead of hh:mm:ss.
         -c --csv                Generate output as comma separated variables.
         -a --delimiter <char>   Character used to separate csv fields.
