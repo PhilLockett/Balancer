@@ -213,8 +213,24 @@ int Configuration::loadTracks(void)
         std::sort(items.begin(), items.end(), comp);
     }
 
-    // Add indices to items.
+    // Calculate the standard deviation of the lengths of the loaded tracks.
+    // Calculate total play time.
     const int max(size());
+    auto lambdaSum = [](size_t a, const Item & b) { return a + b.getValue(); };
+    total = std::accumulate(items.begin(), items.end(), 0, lambdaSum);
+
+    // Calculate mean.
+    double mean{(double)total / max};
+
+    // Calculate variance.
+    auto lambdaVariance = [mean](double a, const Item & b) { return a + std::pow((mean - b.getValue()), 2); };
+    double variance = std::accumulate(items.begin(), items.end(), 0.0, lambdaVariance);
+    variance /= max;
+
+    // Calculate standard deviation.
+    dev = std::sqrt(variance);
+
+    // Add indices to items.
     for (int i{}; i < max; ++i)
         items[i].setIndex(i);
 

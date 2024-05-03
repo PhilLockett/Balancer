@@ -73,6 +73,8 @@ class Configuration
 //- Item list support.
 private:
     std::vector<Item> items;
+    size_t total;
+    double dev;
 
     static const Item & getItem(size_t index) { return instance().items[index]; }
 
@@ -80,6 +82,9 @@ public:
     using Iterator = std::vector<Item>::const_iterator;
 
     static size_t size(void) { return instance().items.size(); }
+    static size_t getTotal(void) { return instance().total; }
+    static double getDeviation(void) { return instance().dev; }
+
     static bool isValidIndex(size_t index) { return index < instance().size(); }
 
     static const std::string & getLabel(size_t index) { return getItem(index).getLabel(); }

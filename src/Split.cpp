@@ -121,10 +121,7 @@ int splitTracksAcrossSides(void)
 {
     const auto showDebug{Configuration::isDebug()};
 
-    // Calculate total play time.
-    auto lambda = [](size_t a, const Item & b) { return a + b.getValue(); };
-    const size_t total = std::accumulate(Configuration::begin(), Configuration::end(), 0, lambda);
-
+    const size_t total{Configuration::getTotal()};      // Get calculate total play time.
     const size_t timeout{Configuration::getTimeout()};  // Get user requested timeout.
     size_t duration{Configuration::getDuration()};      // Get user requested maximum side length.
     const size_t boxes{Configuration::getBoxes()};      // Get user requested number of sides (boxes).
