@@ -206,7 +206,12 @@ int Configuration::loadTracks(void)
 
     items.reserve(input.size());
     for (const auto & line : input)
+    {
         items.emplace_back(line);
+        const size_t length{items.back().getValue()};
+        if (length > longest)
+            longest = length;
+    }
 
     if (isShuffle())
     {

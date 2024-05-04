@@ -78,6 +78,7 @@ class Configuration
 private:
     std::vector<Item> items;
     size_t total;
+    size_t longest;
     double dev;
 
     static Item & getItem(size_t index) { return instance().items[index]; }
@@ -87,6 +88,7 @@ public:
 
     static size_t size(void) { return instance().items.size(); }
     static size_t getTotal(void) { return instance().total; }
+    static size_t getLongest(void) { return instance().longest; }
     static double getDeviation(void) { return instance().dev; }
 
     static bool isValidIndex(size_t index) { return index < instance().size(); }
@@ -113,7 +115,7 @@ public:
 //- Command line parsing support.
 private:
 //- Hide the default constructor and destructor.
-    Configuration(void) : items{},
+    Configuration(void) : items{}, total{}, longest{}, dev{},
         name{"Balancer"}, inputFile{}, timeout{60}, seconds{}, even{},
         boxes{}, shuffle{}, force{}, plain{}, csv{}, delimiter{','}, debug{}
         {  }
