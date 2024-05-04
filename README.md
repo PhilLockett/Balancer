@@ -5,12 +5,16 @@
 **USE AT OWN RISK.**
 
 ## Overview
-This utility reads a text file containing a list of track lengths and titles
+This utility reads a text file containing a list of 'track' lengths and titles
 and splits them across multiple 'sides' based on the options provided.
 
-A more generic description could be that it reads a list of values with labels
-(tracks) and balances these values across multiple boxes (sides). Use the `-p`
-option to display the values as integers.
+Although the original intention for `Balancer` was for arranging a compilation of
+'tracks' across multiple'sides', it can be used more generically.
+The required input is a simple list of values and labels.
+The value does not have to be a representation of time, it can be just an integer. 
+Similarly the output values can also be integers.
+`Balancer` can be used to distribute a number of values (with associated labels)
+evenly over a number of boxes (sides/containers etc.).
 
 To use `Balancer` you will need a C++ compiler and `make` utility installed. 
 
@@ -82,10 +86,20 @@ This option and the `-d` option are mutually exclusive.
 
 ### Re-ordering tracks
 If maintaining the original track order is not necessary, use `-s` or
-`--shuffle` optionn. This allows the software to shuffle the order of the 
-tracks to achieve the best balance of time possible. This uses a very different
-algorithm and can take considerably longer, so setting `--timeout` may be
-necessary to get the best results.
+`--shuffle` option. This allows the software to shuffle the order of the 
+tracks to achieve the best balance of time possible.
+This option also evenly distributes the number of tracks across the sides.
+This uses a very different algorithm and can take considerably longer, so
+setting `--timeout` may be necessary to get the best results.
+
+### Best fit
+If achieving the best, most balanced, distribution (time wise) is required, use
+the `-f` or `--force` option.
+This brute force approach tries every combination of tracks, and does not try 
+to evenly distribute the number of tracks across the sides, so some sides may
+have considerably more tracks than others.
+This algorithm is slow, so setting `--timeout` may be necessary to get the best
+results.
 
 ### Disabling the time formatting
 To display lengths in seconds, instead of hh:mm:ss is required, use `-p` or
