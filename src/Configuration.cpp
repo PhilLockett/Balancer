@@ -26,6 +26,7 @@
 
 #include <future>
 #include <iostream>
+#include <algorithm>
 
 #include "Opts.h"
 #include "Configuration.h"

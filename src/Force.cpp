@@ -34,8 +34,6 @@
 #include "Configuration.h"
 
 
-
-
 /**
  * @section Define Find class.
  *

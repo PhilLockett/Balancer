@@ -36,6 +36,7 @@
 
 class Side;
 
+
 /**
  * @section basic utility code.
  */
