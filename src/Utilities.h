@@ -43,6 +43,7 @@ extern const std::string digit;
 
 extern size_t timeStringToSeconds(std::string buffer);
 extern std::string secondsToTimeString(size_t seconds, const std::string & sep = ":");
+extern void streamValues(std::ostream & os, const std::string & label, size_t seconds, const std::string & sep = ":");
 
 
 /**

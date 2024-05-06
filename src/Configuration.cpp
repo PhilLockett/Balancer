@@ -56,10 +56,10 @@ Item::Item(const std::string & line)
     title = line.substr(pos);
 }
 
-bool Item::streamItem(std::ostream & os) const
+bool Item::streamItem(std::ostream & os, bool plain) const
 {
     const size_t index{getIndex()};
-    const std::string time{secondsToTimeString(getValue())};
+    const std::string time{plain ? std::to_string(getValue()) : secondsToTimeString(getValue())};
 
     if (index < 10)
         os << " ";
@@ -76,7 +76,7 @@ bool Configuration::streamItems(std::ostream & os)
     os << "items:\n";
 
     for (const auto & item : instance())
-        item.streamItem(os);
+        item.streamItem(os, isPlain());
 
     os << "\n";
 

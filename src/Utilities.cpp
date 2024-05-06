@@ -97,6 +97,34 @@ std::string secondsToTimeString(size_t seconds, const std::string & sep)
     return ss.str();
 }
 
+extern void streamValues(std::ostream & os, const std::string & label, size_t seconds, const std::string & sep)
+{
+    os << label << " ";
+
+    if (Configuration::isPlain())
+    {
+        os << seconds;
+    }
+    else
+    {
+        size_t hours{seconds / 3600};
+        seconds -= hours * 3600;
+
+        size_t minutes{seconds / 60};
+        seconds -= minutes * 60;
+
+        os.width(2);
+        os.fill('0');
+        os << hours << sep;
+        os.width(2);
+        os << minutes << sep;
+        os.width(2);
+        os << seconds;
+    }
+
+    os << "\n";
+}
+
 
 /**
  * @section Define Timer class.

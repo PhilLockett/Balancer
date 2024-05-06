@@ -248,11 +248,11 @@ int shuffleTracksAcrossSides(void)
 
     if (showDebug)
     {
-        std::cout << "Total duration " << secondsToTimeString(total) << "\n";
-        std::cout << "Required duration " << secondsToTimeString(duration) << "\n";
-        std::cout << "Required timeout " << secondsToTimeString(timeout) << "\n";
+        streamValues(std::cout, "Total duration", total);
+        streamValues(std::cout, "Required duration", duration);
+        streamValues(std::cout, "Required timeout", timeout);
         std::cout << "Optimum number of sides " << optimum << "\n";
-        std::cout << "Minimum side length " << secondsToTimeString(length) << "\n";
+        streamValues(std::cout, "Minimum side length", length);
     }
 
     Finder find{duration, timeout, optimum};

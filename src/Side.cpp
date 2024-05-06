@@ -93,8 +93,8 @@ bool Side::stream(std::ostream & os, bool plain, bool csv) const
 
 bool Side::summary(std::ostream & os, bool plain) const
 {
-    const std::string time{plain ? std::to_string(seconds) : secondsToTimeString(seconds)};
-    os << getTitle() << " - " << size() << " tracks " << time << "\n";
+    os << getTitle() << " - " << size();
+    streamValues(os, " tracks", seconds);
 
     return true;
 }

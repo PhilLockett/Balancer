@@ -155,12 +155,12 @@ int splitTracksAcrossSides(void)
 
     if (showDebug)
     {
-        std::cout << "Total duration " << secondsToTimeString(total) << "\n";
-        std::cout << "Required timeout " << secondsToTimeString(timeout) << "\n";
-        std::cout << "Required duration " << secondsToTimeString(duration) << "\n";
+        streamValues(std::cout, "Total duration", total);
+        streamValues(std::cout, "Required duration", duration);
+        streamValues(std::cout, "Required timeout", timeout);
         std::cout << "Required side count " << boxes << "\n";
         std::cout << "Optimum number of sides " << optimum << "\n";
-        std::cout << "Minimum side length " << secondsToTimeString(length) << "\n";
+        streamValues(std::cout, "Minimum side length", length);
     }
 
     // Home in on optimum side length.
@@ -173,7 +173,7 @@ int splitTracksAcrossSides(void)
     {
         size_t median{(minimum + maximum + 1) / 2};
         if (showDebug)
-            std::cout << "\nSuggested length " << secondsToTimeString(median) << "\n";
+            streamValues(std::cout, "\nSuggested length", median);
 
         album.clear();
         album = addTracksToSides(median);
@@ -194,8 +194,8 @@ int splitTracksAcrossSides(void)
             minimum = median;
             if (showDebug)
             {
-                std::cout << "Minimum set to " << secondsToTimeString(minimum) << "\n";
-                std::cout << "Maximum is " << secondsToTimeString(maximum) << "\n";
+                streamValues(std::cout, "Minimum is", minimum);
+                streamValues(std::cout, "Maximum set to", maximum);
             }
         }
         else
@@ -204,8 +204,8 @@ int splitTracksAcrossSides(void)
             maximum = median;
             if (showDebug)
             {
-                std::cout << "Minimum is " << secondsToTimeString(minimum) << "\n";
-                std::cout << "Maximum set to " << secondsToTimeString(maximum) << "\n";
+                streamValues(std::cout, "Minimum is", minimum);
+                streamValues(std::cout, "Maximum set to", maximum);
             }
         }
         else

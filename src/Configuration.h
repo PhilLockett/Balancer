@@ -54,7 +54,7 @@ public:
 
     void setIndex(size_t index) { ref = merge(index, getRef()); }
 
-    bool streamItem(std::ostream & os) const;
+    bool streamItem(std::ostream & os, bool plain) const;
 
     void setInUse(void) { ref |= 0x10000000'00000000; }
     void clearInUse(void) { ref &= 0xEFFFFFFF'FFFFFFFF; }
@@ -109,7 +109,7 @@ public:
     static Iterator end(void) { return instance().items.end(); }
 
     static bool streamItems(std::ostream & os);
-    static bool streamItem(std::ostream & os, size_t index) { return getItem(index).streamItem(os); }
+    static bool streamItem(std::ostream & os, size_t index) { return getItem(index).streamItem(os, isPlain()); }
 
 
 //- Command line parsing support.
