@@ -210,6 +210,7 @@ int Configuration::loadTracks(void)
     {
         items.emplace_back(line);
         const size_t length{items.back().getValue()};
+        total += length;
         if (length > longest)
             longest = length;
     }
@@ -222,10 +223,7 @@ int Configuration::loadTracks(void)
     }
 
     // Calculate the standard deviation of the lengths of the loaded tracks.
-    // Calculate total play time.
     const int max(size());
-    auto lambdaSum = [](size_t a, const Item & b) { return a + b.getValue(); };
-    total = std::accumulate(items.begin(), items.end(), 0, lambdaSum);
 
     // Calculate mean.
     double mean{(double)total / max};
