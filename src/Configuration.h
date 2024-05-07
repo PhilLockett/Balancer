@@ -153,7 +153,7 @@ private:
     int version(void) const;
     int parseCommandLine(int argc, char *argv[]);
     int setUp(int argc, char *argv[]);
-    int loadTracks(void);
+    int loadTracksAndFileModel(void);
 
 public:
 //- Delete the copy constructor and assignement operator.

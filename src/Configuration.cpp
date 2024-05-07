@@ -200,7 +200,7 @@ int Configuration::parseCommandLine(int argc, char *argv[])
  * 
  * @return int error value or 0 if no errors.
  */
-int Configuration::loadTracks(void)
+int Configuration::loadTracksAndFileModel(void)
 {
     TextFile input{inputFile};
     input.read();
@@ -263,7 +263,7 @@ int Configuration::setUp(int argc, char *argv[])
     if (!isValid(true))
         return -1;
 
-    return loadTracks();
+    return loadTracksAndFileModel();
 }
 
 
