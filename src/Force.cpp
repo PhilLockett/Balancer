@@ -166,7 +166,7 @@ bool Find::addTracksToSides(void)
 
 bool Find::show(std::ostream & os) const
 {
-    os << "deviation " << dev << "\n";
+    os << "Side deviation " << dev << "\n";
     best.summary(os);
 
     return success;
