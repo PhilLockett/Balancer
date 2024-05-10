@@ -15,6 +15,7 @@ The value does not have to be a representation of time, it can be just an intege
 Similarly the output values can also be integers.
 `Balancer` can be used to distribute a number of values (with associated labels)
 evenly over a number of boxes (sides/containers etc.).
+To achieve this use the `-p` (or `--plain`) option. 
 
 To use `Balancer` you will need a C++ compiler and `make` utility installed. 
 
@@ -102,21 +103,27 @@ This algorithm is slow, so setting `--timeout` may be necessary to get the best
 results.
 
 ### Disabling the time formatting
-To display lengths in seconds, instead of hh:mm:ss is required, use `-p` or
-`--plain`. This may be easier to process or is useful if items other than
+To display lengths in seconds, instead of the hh:mm:ss time format, use the 
+`-p` or`--plain` option.
+This may be easier when parsing the output or is useful if items other than 
 tracks are to be balanced.
+When plain output is requested, the word `item` is used instead of `track`, 
+`box` is used instead of `side` and `value` is used instead of `duration`.
 
 ### Comma separated values output
 If output as comma separated values is required use `-c` or `--csv`. This is 
 useful when output is to be processed by another application. Three columns are
-generated. The first column represents the type and is either the word "Side"
-or "Track". 
+generated. The first column identifies the entry type and is either the word 
+"Side" or "Track". 
 
-If the type is Side, the second column is the length of the side and the third
+If the type is "Side", the second column is the length of the side and the third
 column is a label indicating the side number and the track count. 
 
-If the type is Track, the second column is the length of the track and the 
+If the type is "Track", the second column is the length of the track and the 
 third column is a label indicating the track title. 
+
+Even when plain output is requested, the words "Side" and "Track" are still 
+used to simplify output parsers.
 
 By default the values are separated by a comma, but this can be changed using
 the `-a` or `--delimiter` option followed by the character to use (which should
@@ -159,6 +166,7 @@ be cloned again if needed).
 This code has the following points of interest:
 
   * Implemented as an automake project.
+  * This is an updated version of [TrackSort](https://github.com/PhilLockett/TrackSort)
   * Uses 'Opts' to help handle command line parameters.
   * The command line parameters are stored in the Configuration class.
   * The Configuration class is implemented as a singleton.
