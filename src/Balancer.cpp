@@ -37,6 +37,8 @@
  *
  */
 
+#include <iostream>
+
 #include "Configuration.h"
 
 
@@ -67,9 +69,8 @@ int main(int argc, char *argv[])
         return 0;   // Done!
     }
 
-#if 0
-    std::cout << Configuration::instance() << '\n';
-#endif
+    if (Configuration::isDebug())
+        std::cout << Configuration::instance() << '\n';
 
 //- If all is well, read track list file and generate the output.
     if (Configuration::isShuffle())

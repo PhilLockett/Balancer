@@ -155,10 +155,7 @@ int splitTracksAcrossSides(void)
 
     if (showDebug)
     {
-        streamValues(std::cout, "Total duration", total);
         streamValues(std::cout, "Required duration", duration);
-        streamValues(std::cout, "Required timeout", timeout);
-        std::cout << "Required side count " << boxes << "\n";
         std::cout << "Optimum number of sides " << optimum << "\n";
         streamValues(std::cout, "Minimum side length", length);
     }

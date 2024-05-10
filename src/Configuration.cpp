@@ -240,9 +240,6 @@ int Configuration::loadTracksAndFileModel(void)
     for (int i{}; i < max; ++i)
         items[i].setIndex(i);
 
-    if (isDebug())
-        streamItems(std::cout);
-
     return 0;
 }
 
@@ -298,18 +295,22 @@ int Configuration::initialise(int argc, char *argv[])
 void Configuration::display(std::ostream &os) const
 {
     os << "Config is " << std::string{isValid() ? "" : "NOT "} << "valid\n";
-    os << "Input file name:  " << getInputFile() << '\n';
-    os << "Timeout: " << getTimeout() << "s\n";
-    os << "Disc duration: " << getDuration() << "s\n";
+    os << "Input file name: " << getInputFile() << '\n';
+    streamItems(os);
+    streamValues(os, "Total track duration:", getTotal());
+    streamValues(os, "Longest track:", getLongest());
+    streamValues(os, "Track deviation:", getDeviation());
+    streamValues(os, "Search Timeout:", getTimeout());
+    streamValues(os, "Side Duration:", getDuration());
     if (isEven())
         os << "An even number of sides requested.\n";
-    os << "Boxes: " << getBoxes() << "\n";
+    os << "Side count: " << getBoxes() << "\n";
     if (isShuffle())
         os << "Optimal reordering of tracks requested.\n";
     if (isForce())
         os << "Brute force method of reordering tracks requested.\n";
     if (isPlain())
-        os << "Display lengths in seconds instead of hh:mm:ss.\n";
+        os << "Display lengths as integers instead of hh:mm:ss.\n";
     if (isCSV())
         os << "Comma separated value output requested separated by " << getDelimiter() << ".\n";
 }
