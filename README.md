@@ -1,5 +1,5 @@
 # Balancer
-`Balancer` is a command-line utility for balancing 'tracks' across multiple
+`Balancer` is a command-line utility for balancing 'tracks' across multiple 
 'sides'.
 
 **USE AT OWN RISK.**
@@ -9,13 +9,13 @@ This utility reads a text file containing a list of 'track' lengths and titles
 and splits them across multiple 'sides' based on the options provided.
 
 Although the original intention for `Balancer` was for arranging a compilation of
-'tracks' across multiple'sides', it can be used more generically.
+'tracks' across multiple 'sides', it can be used more generically.
 The required input is a simple list of values and labels.
 The value does not have to be a representation of time, it can be just an integer. 
 Similarly the output values can also be integers.
 `Balancer` can be used to distribute a number of values (with associated labels)
 evenly over a number of boxes (sides/containers etc.).
-To achieve this use the `-p` (or `--plain`) option. 
+To achieve this, use the `-p` (or `--plain`) option. 
 
 To use `Balancer` you will need a C++ compiler and `make` utility installed. 
 
@@ -67,7 +67,7 @@ number of seconds. The timeout can also be specified using the hh:mm:ss format,
 or the mm:ss format.
 
 ### Side length
-To specify the maximum length of a side use `-d` or `--duration` and specify
+To specify the maximum length of a side use `-d` or `--duration` followed by
 the number of seconds. The duration can also be specified using the hh:mm:ss
 format, or the mm:ss format. If the side length is specified, the number of
 sides is calculated from the total length of all the tracks, however, this 
@@ -86,24 +86,26 @@ number required.
 This option and the `-d` option are mutually exclusive.
 
 ### Re-ordering tracks
-If maintaining the original track order is not necessary, use `-s` or
-`--shuffle` option. This allows the software to shuffle the order of the 
-tracks to achieve the best balance of time possible.
-This option also evenly distributes the number of tracks across the sides.
+By default the original track order is maintained. 
+If this is not necessary, use `-s` or `--shuffle` option. This allows the 
+software to shuffle the order of the tracks to achieve the best balance of 
+time possible.
+This option also attempts to evenly distribute the number of tracks across the 
+sides.
 This uses a very different algorithm and can take considerably longer, so
 setting `--timeout` may be necessary to get the best results.
 
 ### Best fit
 If achieving the best, most balanced, distribution (time wise) is required, use
 the `-f` or `--force` option.
-This brute force approach tries every combination of tracks, and does not try 
+This brute force approach tries every combination of tracks, but does not try 
 to evenly distribute the number of tracks across the sides, so some sides may
 have considerably more tracks than others.
 This algorithm is slow, so setting `--timeout` may be necessary to get the best
 results.
 
-### Disabling the time formatting
-To display lengths in seconds, instead of the hh:mm:ss time format, use the 
+### Disabling the time formatting (plain output)
+To display lengths as integers, instead of the hh:mm:ss time format, use the 
 `-p` or`--plain` option.
 This may be easier when parsing the output or is useful if items other than 
 tracks are to be balanced.
