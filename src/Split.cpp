@@ -121,6 +121,8 @@ static bool isMaximumTooLong(const Album & album)
 int splitTracksAcrossSides(void)
 {
     const auto showDebug{Configuration::isDebug()};
+    const auto plain{Configuration::isPlain()};
+    const auto container{selectString("boxes", "sides")};
 
     const size_t total{Configuration::getTotal()};      // Get calculate total play time.
     const size_t timeout{Configuration::getTimeout()};  // Get user requested timeout.
@@ -155,9 +157,9 @@ int splitTracksAcrossSides(void)
 
     if (showDebug)
     {
-        streamValues(std::cout, "Required duration", duration);
-        std::cout << "Optimum number of sides " << optimum << "\n";
-        streamValues(std::cout, "Minimum side length", length);
+        streamValues(std::cout, "Required capacity", "Required duration", duration);
+        std::cout << "Optimum number of " << container << " " << optimum << "\n";
+        // streamValues(std::cout, "Minimum box capacity", "Minimum side length", length);
     }
 
     // Home in on optimum side length.
@@ -170,14 +172,14 @@ int splitTracksAcrossSides(void)
     {
         size_t median{(minimum + maximum + 1) / 2};
         if (showDebug)
-            streamValues(std::cout, "\nSuggested length", median);
+            streamValues(std::cout, "\nSuggested capacity", "\nSuggested length", median);
 
         album.clear();
         album = addTracksToSides(median);
 
         if (showDebug)
         {
-            std::cout << "Suggested sides\n";
+            std::cout << "Suggested " << container << "\n";
             album.summary(std::cout);
         }
 
@@ -191,8 +193,8 @@ int splitTracksAcrossSides(void)
             minimum = median;
             if (showDebug)
             {
-                streamValues(std::cout, "Minimum is", minimum);
-                streamValues(std::cout, "Maximum set to", maximum);
+                streamValues(std::cout, "Minimum is", "Minimum is", minimum);
+                streamValues(std::cout, "Maximum set to", "Maximum set to", maximum);
             }
         }
         else
@@ -201,8 +203,8 @@ int splitTracksAcrossSides(void)
             maximum = median;
             if (showDebug)
             {
-                streamValues(std::cout, "Minimum is", minimum);
-                streamValues(std::cout, "Maximum set to", maximum);
+                streamValues(std::cout, "Minimum is", "Minimum is", minimum);
+                streamValues(std::cout, "Maximum set to", "Maximum set to", maximum);
             }
         }
         else
@@ -221,9 +223,9 @@ int splitTracksAcrossSides(void)
 
     const auto csv{Configuration::isCSV()};
     if (!csv)
-        std::cout << "\nThe recommended sides are\n";
+        std::cout << "\nThe recommended " << container << " are\n";
 
-    album.stream(std::cout, Configuration::isPlain(), csv);
+    album.stream(std::cout, plain, csv);
 
     return 0;
 }

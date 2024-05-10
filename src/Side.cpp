@@ -94,7 +94,7 @@ bool Side::stream(std::ostream & os, bool plain, bool csv) const
 bool Side::summary(std::ostream & os, bool plain) const
 {
     os << getTitle() << " - " << size();
-    streamValues(os, " tracks", seconds);
+    streamValues(os, " items", " tracks", seconds);
 
     return true;
 }

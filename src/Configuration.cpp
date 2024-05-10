@@ -297,14 +297,14 @@ void Configuration::display(std::ostream &os) const
     os << "Config is " << std::string{isValid() ? "" : "NOT "} << "valid\n";
     os << "Input file name: " << getInputFile() << '\n';
     streamItems(os);
-    streamValues(os, "Total track duration:", getTotal());
-    streamValues(os, "Longest track:", getLongest());
-    streamValues(os, "Track deviation:", getDeviation());
-    streamValues(os, "Search Timeout:", getTimeout());
-    streamValues(os, "Side Duration:", getDuration());
+    streamValues(os, "Total item value:", "Total track duration:", getTotal());
+    streamValues(os, "Largest item value:", "Longest track:", getLongest());
+    streamValues(os, "Item deviation:", "Track deviation:", getDeviation());
+    streamValues(os, "Search Timeout:", "Search Timeout:", getTimeout());
+    streamValues(os, "Box capacity:", "Side Duration:", getDuration());
     if (isEven())
         os << "An even number of sides requested.\n";
-    os << "Side count: " << getBoxes() << "\n";
+    os << selectString("Box count: ", "Side count: ") << getBoxes() << "\n";
     if (isShuffle())
         os << "Optimal reordering of tracks requested.\n";
     if (isForce())

@@ -28,6 +28,7 @@
 #include <vector>
 #include <thread>
 
+#include "Configuration.h"
 #include "Side.h"
 #include "Utilities.h"
 #include "TextFile.h"
@@ -97,13 +98,12 @@ std::string secondsToTimeString(size_t seconds, const std::string & sep)
     return ss.str();
 }
 
-extern void streamValues(std::ostream & os, const std::string & label, size_t seconds, const std::string & sep)
+extern void streamValues(std::ostream & os, const std::string & plainLabel, const std::string & audioLabel, size_t seconds, const std::string & sep)
 {
-    os << label << " ";
 
     if (Configuration::isPlain())
     {
-        os << seconds;
+        os << plainLabel << " " << seconds;
     }
     else
     {
@@ -113,6 +113,7 @@ extern void streamValues(std::ostream & os, const std::string & label, size_t se
         size_t minutes{seconds / 60};
         seconds -= minutes * 60;
 
+        os << audioLabel << " ";
         os.width(2);
         os.fill('0');
         os << hours << sep;
@@ -123,6 +124,11 @@ extern void streamValues(std::ostream & os, const std::string & label, size_t se
     }
 
     os << "\n";
+}
+
+const std::string & selectString(const std::string & plainLabel, const std::string & audioLabel)
+{
+    return Configuration::isPlain() ? plainLabel : audioLabel;
 }
 
 

@@ -184,6 +184,8 @@ bool Find::showAll(std::ostream & os, bool plain, bool csv) const
 int bruteForceTrackArranging(void)
 {
     const auto showDebug{Configuration::isDebug()};
+    const auto plain{Configuration::isPlain()};
+    const auto container{selectString("boxes", "sides")};
 
     const size_t total{Configuration::getTotal()};      // Get calculate total play time.
     const size_t timeout{Configuration::getTimeout()};  // Get user requested timeout.
@@ -213,8 +215,8 @@ int bruteForceTrackArranging(void)
 
     if (showDebug)
     {
-        streamValues(std::cout, "Required duration", duration);
-        std::cout << "Optimum number of sides " << optimum << "\n";
+        streamValues(std::cout, "Required capacity", "Required duration", duration);
+        std::cout << "Optimum number of " << container << " " << optimum << "\n";
     }
 
     Find find{duration, timeout, optimum};
@@ -223,15 +225,15 @@ int bruteForceTrackArranging(void)
     {
         if (showDebug)
         {
-            std::cout << "Packed sides\n";
+            std::cout << "Packed " << container << "\n";
             find.show(std::cout);
         }
 
         const auto csv{Configuration::isCSV()};
         if (!csv)
-            std::cout << "\nThe recommended sides are\n";
+            std::cout << "\nThe recommended " << container << " are\n";
 
-        find.showAll(std::cout, Configuration::isPlain(), csv);
+        find.showAll(std::cout, plain, csv);
     }
 
     return 0;

@@ -43,8 +43,8 @@ extern const std::string digit;
 
 extern size_t timeStringToSeconds(std::string buffer);
 extern std::string secondsToTimeString(size_t seconds, const std::string & sep = ":");
-extern void streamValues(std::ostream & os, const std::string & label, size_t seconds, const std::string & sep = ":");
-
+extern void streamValues(std::ostream & os, const std::string & plainLabel, const std::string & audioLabel, size_t seconds, const std::string & sep = ":");
+extern const std::string & selectString(const std::string & plainLabel, const std::string & audioLabel);
 
 /**
  * @section Define Timer class.
