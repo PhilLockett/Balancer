@@ -191,7 +191,6 @@ int bruteForceTrackArranging(void)
     const size_t boxes{Configuration::getBoxes()};      // Get user requested number of sides (boxes).
 
     size_t optimum{};   // The number of sides required.
-    size_t length{};    // The minimum side length.
 
     if (duration)
     {
@@ -202,12 +201,10 @@ int bruteForceTrackArranging(void)
         if ((optimum & 1) && (Configuration::isEven()))
             optimum++;
 
-        length = total / optimum;       // Calculate minimum side length.
     }
     else
     {
         optimum = boxes;
-        length = total / optimum;       // Calculate minimum side length.
 
         const size_t candidate1{Configuration::getLongest()};
         const size_t candidate2{(total * 11) / (optimum * 10)};
@@ -218,7 +215,6 @@ int bruteForceTrackArranging(void)
     {
         streamValues(std::cout, "Required duration", duration);
         std::cout << "Optimum number of sides " << optimum << "\n";
-        streamValues(std::cout, "Minimum side length", length);
     }
 
     Find find{duration, timeout, optimum};
