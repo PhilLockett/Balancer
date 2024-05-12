@@ -1,5 +1,5 @@
 AC_INIT([Balancer], [1.0], [phillockett65@gmail.com])
-: ${CXXFLAGS="-std=c++20"}
+: ${CXXFLAGS="-std=c++20 -Ofast"}
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CXX
 AC_CONFIG_HEADERS([src/config.h])

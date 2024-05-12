@@ -2156,7 +2156,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-: ${CXXFLAGS="-std=c++20"}
+: ${CXXFLAGS="-std=c++20 -Ofast"}
 am__api_version='1.16'
 
 
